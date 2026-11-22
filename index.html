@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yengil</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Yengil">
+<meta name="theme-color" content="#f5f3ee">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ee; --card:#ffffff; --ink:#1f2a24; --muted:#6b7570; --line:#e6e2d9;
+  --green:#2f7d5b; --green-2:#e3f1ea; --coral:#e2725b; --coral-2:#fbe9e4;
+  --blue:#2f78b7; --blue-2:#e4effa; --amber:#c98a12; --amber-2:#fbf1dc;
+  --r:18px; --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#141816; --card:#1e2421; --ink:#eef2ef; --muted:#9aa5a0; --line:#2d3531;
+  --green:#5fc196; --green-2:#1f3a2e; --coral:#f08b74; --coral-2:#3d2621;
+  --blue:#6aaee8; --blue-2:#1c2f40; --amber:#e6b04a; --amber-2:#3a2f18; --shadow:none;}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.45}
+.wrap{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 96px)}
+header{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 14px}
+header h1{font-size:24px;margin:0;font-weight:800;letter-spacing:-.3px}
+header h1 span{color:var(--green)}
+.sync{font-size:12px;color:var(--muted)}
+.iconbtn{border:0;background:var(--card);box-shadow:var(--shadow);width:40px;height:40px;border-radius:12px;font-size:18px;color:var(--ink)}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.card h2{font-size:17px;margin:0 0 10px;font-weight:800}
+.card h3{font-size:15px;margin:12px 0 6px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--bg);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-size:20px;font-weight:800}
+.stat span{font-size:12px;color:var(--muted)}
+.hero{display:flex;gap:16px;align-items:center}
+.ring{flex:0 0 112px;height:112px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .c b{font-size:22px;font-weight:800}
+.ring .c span{font-size:11px;color:var(--muted)}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:6px}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--green-2);color:var(--green)}
+.pill.coral{background:var(--coral-2);color:var(--coral)} .pill.amber{background:var(--amber-2);color:var(--amber)} .pill.blue{background:var(--blue-2);color:var(--blue)}
+.note{border-radius:14px;padding:12px 14px;font-size:14px;margin:10px 0 0}
+.note.amber{background:var(--amber-2)} .note.green{background:var(--green-2)} .note.blue{background:var(--blue-2)}
+.row{display:flex;gap:8px;align-items:center}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+button.btn{font:inherit;font-weight:800;border:0;border-radius:12px;padding:11px 16px;background:var(--green);color:#fff;white-space:nowrap}
+button.btn.ghost{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;font-weight:700;padding:6px 10px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.chip.done{background:var(--green);color:#fff;border-color:var(--green)}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.list li:last-child{border-bottom:0}
+.x{border:0;background:none;color:var(--muted);font-size:18px;padding:0 6px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:11px 2px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+.check:last-child{border-bottom:0}
+.box{flex:0 0 26px;height:26px;border-radius:8px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;margin-top:1px}
+.check.on .box{background:var(--green);border-color:var(--green)}
+.check .t{font-weight:700}
+.check .d{font-size:13px;color:var(--muted)}
+.water{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:8px 0 4px}
+.glass{aspect-ratio:3/4;border-radius:10px 10px 14px 14px;border:2px solid var(--blue);background:transparent;position:relative;overflow:hidden;padding:0}
+.glass i{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--blue);opacity:.85;transition:height .25s}
+.glass.on i{height:78%}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 6px calc(env(safe-area-inset-bottom) + 6px);z-index:10}
+.tabs .in{display:flex;max-width:560px;width:100%}
+.tabs button{flex:1;border:0;background:none;font:inherit;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0}
+.tabs button .e{font-size:21px;line-height:1.1;filter:grayscale(1);opacity:.65}
+.tabs button.on{color:var(--green)}
+.tabs button.on .e{filter:none;opacity:1}
+.seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:0 0 auto;font:inherit;font-weight:700;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:7px 12px;border-radius:999px}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.meal{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.meal:last-child{border-bottom:0}
+.meal .ic{flex:0 0 36px;height:36px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:19px}
+.meal .k{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.plate{display:flex;gap:14px;align-items:center}
+.swap{display:grid;grid-template-columns:1fr 18px 1fr;gap:6px;align-items:center;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.swap:last-child{border-bottom:0}
+.swap .a{color:var(--coral)} .swap .b{color:var(--green);font-weight:700}
+details{border-bottom:1px solid var(--line)}
+details:last-child{border-bottom:0}
+summary{list-style:none;cursor:pointer;padding:13px 2px;font-weight:800;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--muted);font-weight:800}
+details[open] summary::after{content:"–"}
+details .body{padding:0 2px 14px;font-size:15px}
+details .body p{margin:0 0 8px}
+details .body ul{margin:0 0 8px;padding-left:20px}
+.ex{padding:10px 0;border-bottom:1px solid var(--line)}
+.ex:last-child{border-bottom:0}
+.ex b{display:block}
+.week{width:100%;border-collapse:collapse;font-size:14px}
+.week td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.week tr:last-child td{border-bottom:0}
+.week tr.today td{background:var(--green-2)}
+.week td:first-child{font-weight:800;width:44px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);max-height:90vh;overflow:auto}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.hidden{display:none}
+.mini7{display:flex;gap:6px;margin-top:8px}
+.mini7 div{flex:1;text-align:center;font-size:11px;color:var(--muted)}
+.mini7 i{display:block;height:34px;border-radius:8px;background:var(--line);margin-bottom:3px;position:relative;overflow:hidden}
+.mini7 i em{position:absolute;left:0;right:0;bottom:0;background:var(--green)}
+.quote{background:linear-gradient(135deg,var(--green),#3f9a73);color:#fff;border:0}
+.quote .q{font-size:17px;font-weight:700;line-height:1.4}
+.quote .s{font-size:13px;opacity:.85;margin-top:8px}
+.lvl{display:flex;gap:14px;align-items:center}
+.lvl .badge{flex:0 0 72px;height:72px;border-radius:22px;background:var(--amber-2);display:flex;align-items:center;justify-content:center;font-size:40px}
+.lvl .num{font-size:12px;font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:.5px}
+.lvl .nm{font-size:21px;font-weight:800;line-height:1.2}
+.lvgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:12px}
+.lvgrid div{aspect-ratio:1;border-radius:12px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:19px;border:1px solid var(--line)}
+.lvgrid div small{font-size:9px;font-weight:800;color:var(--muted)}
+.lvgrid div.lock{filter:grayscale(1);opacity:.35}
+.lvgrid div.big{border-color:var(--amber);border-width:2px}
+.lvgrid div.cur{background:var(--amber-2);border-color:var(--amber);border-width:2px}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.badges div{background:var(--bg);border-radius:14px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700}
+.badges div b{display:block;font-size:26px}
+.badges div.lock{opacity:.35;filter:grayscale(1)}
+.food{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.food:last-child{border-bottom:0}
+.food .i{flex:1;min-width:0}
+.food .n{font-weight:700}
+.food .m{font-size:12px;color:var(--muted)}
+.add{flex:0 0 38px;height:38px;border-radius:12px;border:0;background:var(--green-2);color:var(--green);font-size:22px;font-weight:800}
+.kbar{height:12px;border-radius:7px;background:var(--line);overflow:hidden;margin:6px 0 2px}
+.kbar i{display:block;height:100%;background:var(--green)}
+.kbar.over i{background:var(--coral)}
+.photo-prev{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin-top:10px;display:block}
+.pbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font-weight:800;border-radius:14px;padding:14px;background:var(--green);color:#fff;cursor:pointer}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:sp 0.8s linear infinite;vertical-align:-3px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pitem{display:grid;grid-template-columns:1fr 78px 30px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.pitem input{padding:7px 8px;text-align:right}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 84px);transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.cele{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:24px;overflow:hidden}
+.cele.on{display:flex}
+.cele .box2{background:var(--card);border-radius:26px;padding:28px 22px;text-align:center;max-width:340px;width:100%;position:relative;z-index:2;animation:pop .4s ease}
+.cele .big{font-size:72px;line-height:1}
+.cele h2{margin:12px 0 6px;font-size:24px}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.conf{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards;z-index:1}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Yengil<span>.</span></h1>
+      <div class="sync" id="sync">📱 Telefoningizda saqlanadi</div>
+    </div>
+    <button class="iconbtn" id="openSettings" aria-label="Sozlamalar">⚙️</button>
+  </header>
+  <main id="view"></main>
+</div>
+
+<nav class="tabs"><div class="in" id="tabs">
+  <button data-tab="home" class="on"><span class="e">🏠</span>Bosh sahifa</button>
+  <button data-tab="food"><span class="e">🥗</span>Ovqat</button>
+  <button data-tab="move"><span class="e">🏃</span>Mashq</button>
+  <button data-tab="habits"><span class="e">💧</span>Suv & odat</button>
+  <button data-tab="learn"><span class="e">📖</span>Ma'lumot</button>
+</div></nav>
+
+<div class="modal" id="settings"><div class="sheet">
+  <h2 style="margin:0 0 12px">Sozlamalar</h2>
+  <div class="grid2">
+    <div class="field"><label>Jins</label><select id="s_sex"><option value="f">Ayol</option><option value="m">Erkak</option></select></div>
+    <div class="field"><label>Yosh</label><input id="s_age" type="number" inputmode="numeric"></div>
+    <div class="field"><label>Bo'y (sm)</label><input id="s_height" type="number" inputmode="numeric"></div>
+    <div class="field"><label>Eng kam muddat (oy)</label><input id="s_mmin" type="number" inputmode="numeric" min="1" max="24"></div>
+    <div class="field"><label>Eng ko'p muddat (oy)</label><input id="s_mmax" type="number" inputmode="numeric" min="1" max="36"></div>
+    <div class="field"><label>Boshlang'ich vazn (kg)</label><input id="s_start" type="number" step="0.1" inputmode="decimal"></div>
+    <div class="field"><label>Maqsad vazn (kg)</label><input id="s_goal" type="number" step="0.1" inputmode="decimal"></div>
+  </div>
+  <div class="field"><label>Boshlangan sana</label><input id="s_date" type="date"></div>
+  <div class="field"><label>Kundalik faollik (mashqdan tashqari)</label>
+    <select id="s_act">
+      <option value="1.2">Asosan o'tirib ishlayman</option>
+      <option value="1.375">Biroz harakat (uy ishlari, yurish)</option>
+      <option value="1.55">Ko'p harakat (oyoqda ishlayman)</option>
+    </select></div>
+  <p class="small muted">Kaloriya hisobi jins, yosh, bo'y va hozirgi vaznga qarab o'zgaradi.</p>
+  <div class="field" style="border-top:1px solid var(--line);margin:12px 0 0;padding-top:12px"><label>📸 Anthropic API kaliti (ixtiyoriy, rasm funksiyasi uchun)</label><input id="s_key" type="password" autocomplete="off" placeholder="sk-ant-..."><p class="small muted" style="margin:4px 0 0">Kalit faqat telefoningizda saqlanadi. Har bir rasm tahlili hisobingizdan bir necha sent oladi.</p></div>
+  <div style="border-top:1px solid var(--line);margin:12px 0 0;padding-top:12px">
+    <h3 style="margin:0 0 4px">💾 Zaxira nusxa</h3>
+    <button class="btn" id="bkFile" style="width:100%;margin-bottom:6px">💾 Faylga saqlash</button>
+    <label class="btn ghost" for="bkPick" style="display:block;text-align:center;margin-bottom:6px">📂 Fayldan tiklash</label><input id="bkPick" type="file" accept=".json,application/json,text/plain" class="hidden">
+    <p class="small muted" style="margin:0 0 8px">Barcha ma'lumotlar har o'zgarishda avtomatik saqlanadi. Qo'shimcha xavfsizlik uchun oyiga bir marta "Faylga saqlash" ni bosib, faylni iCloud Drive'ga saqlang.</p>
+    <button class="btn ghost" id="bkCopy" style="width:100%">📋 Nusxani ko'chirish</button>
+    <textarea id="bkIn" rows="3" placeholder="Tiklash uchun nusxani shu yerga joylang" style="font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;width:100%;margin-top:8px"></textarea>
+    <button class="btn ghost" id="bkRestore" style="width:100%;margin-top:6px">♻️ Nusxadan tiklash</button>
+    <p class="small muted" id="bkMsg" style="margin:6px 0 0"></p>
+  </div>
+  <div class="row" style="justify-content:flex-end;margin-top:8px">
+    <button class="btn ghost" id="closeSettings">Bekor qilish</button>
+    <button class="btn" id="saveSettings">Saqlash</button>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+<div class="cele" id="cele"><div class="box2"><div class="big" id="ceIc"></div><h2 id="ceT"></h2><p class="muted" id="ceD" style="margin:0 0 16px"></p><button class="btn" id="ceOk">Davom etamiz! 💪</button></div></div>
+<script>
+(function(){
+"use strict";
+var LS_KEY="yengil_state_v1";
+function pad(n){return (n<10?"0":"")+n}
+function dkey(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parseD(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+function today(){return dkey(new Date())}
+function addDays(s,n){var d=parseD(s);d.setDate(d.getDate()+n);return dkey(d)}
+function daysBetween(a,b){return Math.round((parseD(b)-parseD(a))/86400000)}
+var MONTHS=["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"];
+function fmtD(s){var d=parseD(s);return d.getDate()+"-"+MONTHS[d.getMonth()]}
+function fmtDY(s){var d=parseD(s);return d.getDate()+"-"+MONTHS[d.getMonth()]+" "+d.getFullYear()}
+function r1(x){return Math.round(x*10)/10}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function defaults(){
+  var t=today()<"2026-11-23"?"2026-11-23":today();
+  return {settings:{sex:"f",age:31,height:160,start:77,goal:55,mMin:5,mMax:8,startDate:t,activity:1.375},
+    weights:[{d:t,w:77}],days:{},t:0};
+}
+var S=defaults();
+var lsHad=false;
+try{var raw=localStorage.getItem(LS_KEY);if(raw){var p=JSON.parse(raw);if(p&&p.settings){S=p;lsHad=true;}}}catch(e){}
+if(!S.days)S.days={}; if(!S.weights)S.weights=[];
+var migDirty=false;
+function migrate(){var s=S.settings;
+  if(!S.mig1){S.mig1=1;migDirty=true;if(s.startDate==="2026-11-22"){s.startDate="2026-11-23";S.weights.forEach(function(p){if(p.d==="2026-11-22"&&p.w===s.start)p.d="2026-11-23";});}}if(s.mMin==null){s.mMin=5;s.mMax=8;delete s.months;}}
+migrate();
+
+/* ---------- saving ---------- */
+var IDB=null;
+try{var rq=indexedDB.open("yengil",1);rq.onupgradeneeded=function(){rq.result.createObjectStore("kv")};
+  rq.onsuccess=function(){IDB=rq.result;
+    {var tx=IDB.transaction("kv").objectStore("kv").get("state");
+      tx.onsuccess=function(){var v=tx.result;if(v){try{var r=JSON.parse(v);if(r&&r.settings&&(!lsHad||(r.t||0)>(S.t||0))){lsHad=true;S=r;migrate();if(!S.days)S.days={};if(!S.weights)S.weights=[];try{localStorage.setItem(LS_KEY,v)}catch(e){}render();toast("♻️ Ma'lumotlar tiklandi");}}catch(e){}}};}
+  };}catch(e){}
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+function save(){
+  try{checkRewards()}catch(e){}
+  S.t=Date.now();
+  var js=JSON.stringify(S);
+  try{localStorage.setItem(LS_KEY,js)}catch(e){}
+  try{if(IDB)IDB.transaction("kv","readwrite").objectStore("kv").put(js,"state");}catch(e){}
+}
+function setSync(txt){document.getElementById("sync").textContent=txt}
+var PH={busy:false,items:null,err:"",preview:"",note:"",hidden:false};
+function apiKey(){return (S.settings&&S.settings.apiKey)||""}
+function blobB64(b){return new Promise(function(res,rej){var fr=new FileReader();fr.onload=function(){res(String(fr.result).split(",")[1])};fr.onerror=rej;fr.readAsDataURL(b)})}
+var PH={busy:false,items:null,err:"",preview:"",note:"",hidden:false};
+function shrink(file){
+  return new Promise(function(res){
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      var m=1024,w=img.naturalWidth,h=img.naturalHeight,k=Math.min(1,m/Math.max(w,h));
+      var cv=document.createElement("canvas");cv.width=Math.round(w*k);cv.height=Math.round(h*k);
+      cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
+      cv.toBlob(function(b){URL.revokeObjectURL(url);res(b||file)},"image/jpeg",0.82);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);res(file)};
+    img.src=url;
+  });
+}
+function analyzePhoto(file){
+  if(!apiKey()||PH.busy)return;
+  PH.busy=true;PH.items=null;PH.err="";
+  if(PH.preview)try{URL.revokeObjectURL(PH.preview)}catch(e){}
+  PH.preview=URL.createObjectURL(file);
+  var noteEl=document.getElementById("phNote");PH.note=noteEl?noteEl.value.trim():"";
+  render();
+  shrink(file).then(function(blob){
+    var prompt="Sen ovqatlanish bo'yicha mutaxassissan. Rasmdagi ovqatlarni aniqlab, har birining porsiyasi, kaloriyasi va oqsilini taxmin qil. "+
+      "Rasmda o'zbek taomlari bo'lishi mumkin (osh, mastava, lag'mon, manti, somsa, dimlama, kabob, non va h.k.). "+
+      "Porsiyani likopcha, qoshiq, non kabi narsalarga qarab baho ber. "+(PH.note?"Foydalanuvchi izohi: \""+PH.note.slice(0,200)+"\". ":"")+
+      "Faqat JSON qaytar, boshqa matnsiz: {\"items\":[{\"n\":\"taom nomi o'zbekcha\",\"p\":\"porsiya, masalan 250 g yoki 1 kosa\",\"k\":kaloriya_butun_son,\"pr\":oqsil_gramm_butun_son}],\"izoh\":\"o'zbekcha 1 qisqa maslahat\"}. "+
+      "Agar rasmda ovqat bo'lmasa: {\"items\":[],\"izoh\":\"Rasmda ovqat topilmadi\"}.";
+    return blobB64(blob).then(function(b64){
+      return fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":apiKey(),"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:1024,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:blob.type||"image/jpeg",data:b64}},{type:"text",text:prompt}]}]})});
+    }).then(function(r){
+      return r.json().then(function(d){
+        if(!r.ok){var e=new Error("api");e.code=r.status===401?"bad_key":r.status===429?"rate_limited":"api";throw e;}
+        var t=(d.content||[]).map(function(c){return c.text||""}).join("");var m=t.match(/\{[\s\S]*\}/);return JSON.parse(m?m[0]:t);
+      });
+    });
+  }).then(function(v){
+    PH.busy=false;
+    var items=(v&&v.items)||[];
+    PH.items=items.filter(function(x){return x&&x.n}).map(function(x){return {n:String(x.n).slice(0,60),p:String(x.p||"1 porsiya").slice(0,40),k:Math.max(0,Math.round(+x.k||0)),pr:Math.max(0,Math.round(+x.pr||0))}});
+    PH.izoh=v&&v.izoh?String(v.izoh).slice(0,200):"";
+    if(!PH.items.length)PH.err=PH.izoh||"Rasmda ovqat topilmadi. Boshqa rasm sinab ko'ring.";
+    render();
+  }).catch(function(e){
+    PH.busy=false;
+    var code=e&&e.code;
+    PH.err=code==="bad_key"?"API kaliti noto'g'ri. Sozlamalarda (⚙️) tekshiring.":code==="rate_limited"?"Hozir so'rovlar ko'p — bir oz kutib, qayta urinib ko'ring.":"Tahlil qilib bo'lmadi. Qayta urinib ko'ring yoki ro'yxatdan qo'lda tanlang.";
+    render();
+  });
+}
+function photoCard(){
+  if(!apiKey())return '<div class="card"><h2>📸 Rasm orqali hisoblash</h2><p class="small muted" style="margin:0">Bu funksiya sun\'iy intellekt orqali ishlaydi. Yoqish uchun Sozlamalarda (⚙️) Anthropic API kalitini kiriting. Kalitsiz app\'ning qolgan barcha qismlari to\'liq ishlaydi.</p></div>';
+  var h='<div class="card"><h2>📸 Rasm orqali hisoblash</h2>'+
+   '<label class="pbtn" for="phFile">📷 Ovqatni rasmga olish</label><input id="phFile" type="file" accept="image/*" class="hidden">'+
+   '<input id="phNote" placeholder="Izoh (ixtiyoriy): masalan, yarmini yedim" value="'+esc(PH.note)+'" style="margin-top:8px">';
+  if(PH.preview)h+='<img class="photo-prev" src="'+PH.preview+'" alt="Ovqat rasmi">';
+  if(PH.busy)h+='<p class="small" style="margin:10px 0 0"><span class="spin"></span>Rasm tahlil qilinyapti...</p>';
+  if(PH.err)h+='<div class="note amber small">'+esc(PH.err)+'</div>';
+  if(PH.items&&PH.items.length){
+    var tot=0;PH.items.forEach(function(x){tot+=x.k});
+    h+='<div style="margin-top:10px">'+PH.items.map(function(x,i){return '<div class="pitem"><div><b>'+esc(x.n)+'</b><div class="small muted">'+esc(x.p)+' · '+x.pr+' g oqsil</div></div>'+
+      '<input type="number" inputmode="numeric" data-pk="'+i+'" value="'+x.k+'" aria-label="kkal"><button class="x" data-prm="'+i+'" aria-label="Olib tashlash">×</button></div>'}).join("")+'</div>'+
+     '<p class="small" style="margin:8px 0 0">Jami: <b id="phTot">'+tot+' kkal</b> <span class="muted">(raqamni bosib to\'g\'irlashingiz mumkin)</span></p>'+
+     (PH.izoh?'<div class="note green small">💡 '+esc(PH.izoh)+'</div>':'')+
+     '<button class="btn" id="phAdd" style="width:100%;margin-top:10px">✓ Kundalikka qo\'shish</button>';
+  }
+  h+='<p class="small muted" style="margin:8px 0 0">Natija taxminiy: yog\' va porsiya hajmi rasmda to\'liq ko\'rinmaydi. Likopchani yuqoridan, yaxshi yorug\'likda suratga oling.</p></div>';
+  return h;
+}
+
+/* ---------- calculations ---------- */
+function weightsSorted(){return S.weights.slice().sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:0})}
+function curW(){var w=weightsSorted();return w.length?w[w.length-1].w:S.settings.start}
+function calc(){
+  var s=S.settings,w=curW(),h=s.height/100;
+  var bmr=10*w+6.25*s.height-5*s.age+(s.sex==="m"?5:-161);
+  var tdee=bmr*s.activity;
+  var floor=s.sex==="m"?1500:1200;
+  var kcal=Math.max(floor,Math.round((tdee-600)/10)*10);
+  var protein=Math.round(1.6*s.goal);
+  var waterMl=Math.min(3000,Math.max(2000,Math.round(w*33/250)*250));
+  var endFast=addDays(s.startDate,Math.round(s.mMin*30.44)),endSlow=addDays(s.startDate,Math.round(s.mMax*30.44));
+  var total=s.start-s.goal, needFast=total/(s.mMin*4.345), needSlow=total/(s.mMax*4.345);
+  var lost=s.start-w, left=w-s.goal;
+  var realWeeks=left>0?left/0.75:0;
+  return {w:w,bmi:w/(h*h),goalBmi:s.goal/(h*h),bmr:bmr,tdee:tdee,kcal:kcal,protein:protein,
+    fat:Math.round(kcal*0.28/9),carb:Math.round((kcal-protein*4-kcal*0.28)/4),
+    waterMl:waterMl,glasses:waterMl/250,endFast:endFast,endSlow:endSlow,total:total,needFast:needFast,needSlow:needSlow,lost:lost,left:left,
+    realDate:addDays(today(),Math.round(realWeeks*7)),pct:total>0?Math.max(0,Math.min(1,lost/total)):0};
+}
+function bmiLabel(b){return b<18.5?["Kam vazn","amber"]:b<25?["Normal","green"]:b<30?["Ortiqcha vazn","amber"]:["Semizlik (I daraja)","coral"]}
+function phase(){var d=daysBetween(S.settings.startDate,today());return Math.max(1,Math.min(5,Math.floor(d/30)+1))}
+function day(k){k=k||today();if(!S.days[k])S.days[k]={water:0,habits:{},workout:false};if(!S.days[k].food)S.days[k].food=[];return S.days[k]}
+
+/* ---------- levels & rewards ---------- */
+function maxLevel(){return Math.max(1,Math.ceil(S.settings.start-S.settings.goal-1e-9))}
+function levelOf(w){
+  var s=S.settings,mx=maxLevel();
+  if(w<=s.goal)return mx;
+  return Math.max(0,Math.min(mx-1,Math.floor(s.start-w+1e-9)));
+}
+function levelInfo(i){
+  var mx=maxLevel();
+  var L=i>=mx?LEVELS[LEVELS.length-1]:LEVELS[Math.min(i,LEVELS.length-2)];
+  return {ic:L[0],name:L[1],big:i>0&&i%5===0,final:i>=mx};
+}
+function statsAll(){
+  var c=calc(),st={food:0,water:0,perfect:0,work:0};
+  for(var k in S.days){var d=S.days[k];if(!d)continue;
+    if(d.food&&d.food.length)st.food++;
+    if(d.water>=c.glasses)st.water++;
+    if(d.workout)st.work++;
+    var h=0;for(var x in d.habits)if(d.habits[x])h++;if(h>=HABITS.length)st.perfect++;}
+  return st;
+}
+function badgeMet(id,st){
+  return id==="firstfood"?st.food>=1:id==="food7"?st.food>=7:id==="water7"?st.water>=7:id==="perfect"?st.perfect>=1:
+    id==="work1"?st.work>=1:id==="work10"?st.work>=10:id==="work30"?st.work>=30:id==="streak7"?streak()>=7:id==="weigh8"?S.weights.length>=8:id==="meas4"?(S.meas||[]).length>=4:false;
+}
+var CQ=[];
+function checkRewards(){
+  var lv=levelOf(curW());
+  if(S.maxLevel==null)S.maxLevel=lv;
+  else if(lv>S.maxLevel){
+    var L=levelInfo(lv),lost=r1(S.settings.start-curW());
+    CQ.push([L.ic,L.final?"Maqsadga yetdingiz! 🎉":lv+"-daraja: "+L.name,
+      L.final?"Siz "+lost+" kg tashladingiz va maqsad vazningizga yetdingiz. Endi asosiy vazifa — natijani saqlash.":
+      L.big?"Ajoyib! "+lv+" kg tashlandi — bu katta bosqich. O'zingizni ovqat bilan emas, yoqimli narsa bilan taqdirlang!":
+      "Yana 1 kg ortda qoldi. Jami: −"+lost+" kg. Shunday davom eting!"]);
+    S.maxLevel=lv;
+  }
+  if(!S.badges)S.badges={};
+  var st=statsAll();
+  BADGES.forEach(function(b){if(!S.badges[b[0]]&&badgeMet(b[0],st)){S.badges[b[0]]=today();CQ.push([b[1],"Yangi yutuq: "+b[2],b[3]+"!"]);}});
+  if(CQ.length)setTimeout(showCele,350);
+}
+function showCele(){
+  var el=document.getElementById("cele");if(el.classList.contains("on")||!CQ.length)return;
+  var x=CQ.shift();
+  document.getElementById("ceIc").textContent=x[0];document.getElementById("ceT").textContent=x[1];document.getElementById("ceD").textContent=x[2];
+  [].forEach.call(el.querySelectorAll(".conf"),function(n){n.remove()});
+  var cols=["#2f7d5b","#e2725b","#c98a12","#2f78b7","#5fc196","#f0c040"];
+  for(var i=0;i<45;i++){var c=document.createElement("i");c.className="conf";c.style.left=(Math.random()*100)+"%";c.style.background=cols[i%cols.length];
+    c.style.animationDuration=(1.8+Math.random()*1.8)+"s";c.style.animationDelay=(Math.random()*.6)+"s";el.appendChild(c);}
+  el.classList.add("on");
+}
+var toastT=null;
+function toast(t){var el=document.getElementById("toast");el.textContent=t;el.classList.add("on");clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove("on")},1600)}
+
+/* ---------- content ---------- */
+var HABITS=[
+ {id:"sleep",t:"7–8 soat uxladim",d:"Kam uyqu ishtahani oshiradi"},
+ {id:"steps",t:"Qadamlar maqsadiga yetdim",d:"Bosqichga qarab 6 000–10 000 qadam"},
+ {id:"veg",t:"Har ovqatda sabzavot",d:"Likopchaning yarmi sabzavot"},
+ {id:"protein",t:"Har ovqatda oqsil",d:"Tuxum, go'sht, baliq, tvorog, dukkaklilar"},
+ {id:"nosugar",t:"Shirin ichimlik ichmadim",d:"Gazli suv, sharbat, shakarli choy yo'q"},
+ {id:"late",t:"Uxlashdan 3 soat oldin ovqatni tugatdim",d:"Kechasi gazak qilmadim"},
+ {id:"slow",t:"Sekin, telefonsiz ovqatlandim",d:"20 daqiqa — to'qlik signali kelishi uchun"}
+];
+var EX={
+ squat:["Stulga o'tirib-turish (squat)","Oyoqlar yelka kengligida, stulga tegib-tegmay o'tiring va turing. Tizzalar barmoq uchidan chiqmasin, orqa tekis."],
+ squat2:["Squat (stulsiz)","Xuddi stuldagidek, lekin stulsiz. Tovonga tayaning, pastda 1 soniya to'xtang."],
+ wallpush:["Devorga qarab otjimaniye","Devordan bir qadam narida turing, qo'llarni devorga qo'yib bukib-yozing. Tana tekis taxta kabi."],
+ kneepush:["Tizzada otjimaniye","Tizzalarni polga qo'yib, ko'krak polga yaqinlashguncha tushing. Qorin tarang."],
+ bridge:["Ko'prikcha (glute bridge)","Chalqancha yotib, tizzalarni bukib, dumbani ko'taring va 2 soniya ushlang."],
+ plank:["Planka","Tirsaklarda, tana boshdan tovongacha tekis. Bel osilmasin. Nafasni ushlamang."],
+ birddog:["Qush-it (bird-dog)","To'rt oyoqlab turib, qarama-qarshi qo'l va oyoqni cho'zing, 2 soniya ushlang, almashtiring."],
+ lunge:["Hamla (lunge)","Bir oyoq bilan oldinga katta qadam tashlab, ikkala tizzani 90° gacha buking. Kerak bo'lsa devorga suyaning."],
+ row:["Suv butilkasi bilan tortish","Ikki qo'lda 1,5 l butilka, oldinga engashib, tirsaklarni orqaga torting."],
+ stretch:["Cho'zilish (10 daqiqa)","Son orqasi, boldir, ko'krak va bel mushaklarini har biriga 30 soniyadan cho'zing."]
+};
+var PHASES=[
+ {n:"1-oy · Boshlanish",steps:6000,goal:"Odat hosil qilish: har kuni harakat, tanani yuklamaga o'rgatish.",
+  cardio:"Tez yurish 30 daqiqa",long:"Uzoq sayr 45 daqiqa",
+  str:{name:"Kuch mashqi A",list:[["squat","2×10"],["wallpush","2×10"],["bridge","2×12"],["plank","2×20 soniya"]]}},
+ {n:"2-oy · Ritm",steps:7500,goal:"Yurish vaqtini oshirish, kuch mashqini haftasiga 3 marta qilish.",
+  cardio:"Tez yurish 40 daqiqa",long:"Uzoq sayr 60 daqiqa",
+  str:{name:"Kuch mashqi A+",list:[["squat","3×12"],["wallpush","3×12"],["bridge","3×15"],["plank","3×25 soniya"],["birddog","2×8 har tomon"]]}},
+ {n:"3-oy · Kuchayish",steps:9000,goal:"Yengil yugurish intervallarini qo'shish.",
+  cardio:"Interval: 1 daq yugurish + 2 daq yurish × 8",long:"Uzoq sayr 60 daqiqa yoki velosiped",
+  str:{name:"Kuch mashqi B",list:[["squat2","3×12"],["kneepush","3×8"],["lunge","2×8 har oyoq"],["row","3×12"],["plank","3×30 soniya"]]}},
+ {n:"4-oy · Barqarorlik",steps:10000,goal:"Yugurish ulushini oshirish, mushakni saqlash.",
+  cardio:"Interval: 2 daq yugurish + 1 daq yurish × 8",long:"Uzoq sayr 75 daqiqa",
+  str:{name:"Kuch mashqi B+",list:[["squat2","3×15"],["kneepush","3×10"],["lunge","3×10 har oyoq"],["row","3×15"],["bridge","3×15"],["plank","3×40 soniya"]]}},
+ {n:"5–8-oy · Yakuniy",steps:10000,goal:"20–25 daqiqa to'xtamay yengil yugurish, natijani mustahkamlash.",
+  cardio:"Yengil yugurish 20–25 daqiqa (yoki tez yurish 50 daq)",long:"Uzoq sayr 90 daqiqa yoki 30 daq yugurish",
+  str:{name:"Kuch mashqi C",list:[["squat2","4×15"],["kneepush","3×12"],["lunge","3×12 har oyoq"],["row","4×15"],["birddog","3×10"],["plank","3×45 soniya"]]}}
+];
+var DAYN=["Du","Se","Ch","Pa","Ju","Sh","Ya"];
+function weekPlan(p){
+  var P=PHASES[p-1],st=P.str.name;
+  var three=p>=2;
+  return [P.cardio,st,P.cardio,three?st:P.cardio,three?st:st,P.long,"Dam olish + "+EX.stretch[0].toLowerCase()];
+}
+var MEALS=[
+ [["🍳","Nonushta","2 ta qaynatilgan tuxum, bodring-pomidor, 1 bo'lak qora non"],["🍲","Tushlik","1 kosa mastava (yog'siz go'sht bilan) + ko'k salat"],["🍗","Kechki ovqat","Pishirilgan tovuq ko'kragi 120 g + grechka 4 osh qoshiq + sabzavot"],["🍎","Gazak","1 olma + 1 stakan kefir"]],
+ [["🥣","Nonushta","Suli bo'tqasi 40 g (suvda yoki yog'siz sutda) + yarim banan + 5 dona yong'oq"],["🥘","Tushlik","Mol go'shti dimlamasi — sabzavot ko'p, kartoshka kam"],["🐟","Kechki ovqat","Pechda baliq 150 g + bug'da pishgan sabzavot"],["🫐","Gazak","Tvorog 150 g (5%) + bir hovuch rezavor"]],
+ [["🍳","Nonushta","Omlet (2 tuxum + ismaloq yoki pomidor) + 1 bo'lak qora non"],["🍚","Tushlik","Osh — kichik likopcha (~200 g): go'sht va sabzi ko'proq, guruch kamroq + achchiq-chuchuk salat"],["🥣","Kechki ovqat","Yasmiq sho'rva 1 kosa + salat"],["🥛","Gazak","Shakarsiz yogurt yoki qatiq 150 g"]],
+ [["🧀","Nonushta","Tvorog 150 g + 1 choy qoshiq asal + olma"],["🍗","Tushlik","Tovuq 120 g + guruch 4 osh qoshiq + katta ko'k salat"],["🍲","Kechki ovqat","Moshxo'rda yoki mastava 1 kosa"],["🍊","Gazak","2 ta mandarin + 10 dona bodom"]],
+ [["🍳","Nonushta","2 tuxum + pishloq 30 g + bodring + 1 bo'lak qora non"],["🥘","Tushlik","Dimlama yoki 2 six tovuq kabob + achchiq-chuchuk salat"],["🥗","Kechki ovqat","Bug'da tovuq yoki kurka kotlet 2 dona + karam salat"],["🥛","Gazak","1 stakan kefir"]],
+ [["🥣","Nonushta","Suli bo'tqasi + olma + darchin"],["🍲","Tushlik","Qaynatma sho'rva (mol go'shti, sabzavot), non 1 bo'lak"],["🐟","Kechki ovqat","Baliq yoki tovuq 120 g + guruch o'rniga gulkaram yoki brokkoli"],["🥛","Gazak","Tvorog yoki yogurt"]],
+ [["🍳","Nonushta","Sabzavotli omlet"],["🎉","Tushlik","Erkin kun: istagan taomingiz, lekin likopchaning yarmi sabzavot va non 1 bo'lak"],["🥗","Kechki ovqat","Yengil: katta salat + 2 tuxum yoki tvorog"],["🍐","Gazak","1 dona meva"]]
+];
+var SWAPS=[
+ ["Oq non, patir","1 bo'lak qora / to'liq donli non"],
+ ["Gazli ichimlik, sharbat","Suv, limonli suv, shakarsiz choy"],
+ ["Shakar bilan choy","Shakarsiz choy (kerak bo'lsa 1 dona xurmo)"],
+ ["Xamirli taomlar: lag'mon, manti, chuchvara, somsa, norin","Dimlama, kabob + salat, sho'rva, moshkichiri"],
+ ["Qovurma, qozon kabob","Tandirda, pechda yoki bug'da pishgan taom"],
+ ["Mayonez","Qatiq yoki yogurtli sous"],
+ ["Pechenye, shirinlik","Meva + bir hovuch yong'oq"],
+ ["Katta likopcha osh","Kichik likopcha + katta salat"],
+ ["Kechki gazak (chips, semechka)","Kefir yoki bodring-sabzi"]
+];
+/* name, portion, kcal, protein g, category — taxminiy qiymatlar; xamirli taomlar yo'q */
+var FOODS=[
+ ["Mastava","1 kosa (350 ml)",250,12,"Suyuq"],["Moshxo'rda","1 kosa",280,13,"Suyuq"],["Qaynatma sho'rva (mol go'shti)","1 kosa",220,15,"Suyuq"],
+ ["Kartoshkali sho'rva","1 kosa",200,10,"Suyuq"],["Yasmiq sho'rva","1 kosa",230,14,"Suyuq"],["No'xat sho'rva","1 kosa",260,14,"Suyuq"],
+ ["Tovuq sho'rva","1 kosa",180,15,"Suyuq"],["Karam sho'rva","1 kosa",150,8,"Suyuq"],["Chalop","1 kosa",90,5,"Suyuq"],["Okroshka (qatiqli)","1 kosa",180,9,"Suyuq"],
+ ["Osh — kichik likopcha","200 g",380,12,"Asosiy"],["Osh — katta likopcha","350 g",660,21,"Asosiy"],["Dimlama","1 likopcha (300 g)",320,18,"Asosiy"],
+ ["Qozon kabob","1 porsiya (250 g)",480,22,"Asosiy"],["Go'sht kabob (shashlik)","1 six (~80 g)",200,15,"Asosiy"],["Jigar kabob","1 six",150,16,"Asosiy"],
+ ["Tovuq kabob","1 six (~100 g)",170,22,"Asosiy"],["Moshkichiri","1 likopcha (250 g)",330,13,"Asosiy"],["Dolma (uzum bargida)","5 dona",300,14,"Asosiy"],
+ ["Qovoq dimlama","1 likopcha",150,3,"Asosiy"],["Bug'da kotlet","2 dona",260,22,"Asosiy"],["Qaynatilgan mol go'shti","100 g",250,26,"Asosiy"],
+ ["Tovuq ko'kragi (pishirilgan)","120 g",200,37,"Asosiy"],["Pechda baliq","150 g",210,30,"Asosiy"],
+ ["Lag'mon","1 kosa (400 g)",550,22,"Xamirli"],["Manti","4 dona",480,22,"Xamirli"],["Chuchvara (sho'rvali)","1 kosa",400,18,"Xamirli"],
+ ["Somsa (go'shtli)","1 dona",350,12,"Xamirli"],["Ko'k somsa","1 dona",230,5,"Xamirli"],["Norin","1 porsiya (200 g)",450,22,"Xamirli"],
+ ["Xonim","1 porsiya (200 g)",380,11,"Xamirli"],["Shivit oshi","1 likopcha",520,20,"Xamirli"],["Ugra osh (kesma)","1 kosa",350,15,"Xamirli"],
+ ["Tuxum barak","10 dona",330,13,"Xamirli"],["Beshbarmoq","1 likopcha",600,30,"Xamirli"],["Qatlama","1 dona",450,8,"Xamirli"],["Gumma","1 dona",250,7,"Xamirli"],
+ ["Grechka","4 osh qoshiq (150 g)",165,6,"Garnir"],["Guruch","4 osh qoshiq (150 g)",195,4,"Garnir"],["Qaynatilgan kartoshka","2 dona (200 g)",160,4,"Garnir"],
+ ["Bug'da sabzavot","200 g",70,3,"Garnir"],
+ ["Achchiq-chuchuk","1 kosacha",40,1,"Salat"],["Bodring-pomidor salat","1 kosacha",35,1,"Salat"],["Karam salat","1 kosacha",60,2,"Salat"],
+ ["Vinegret","150 g",130,2,"Salat"],["Lavlagi salat","150 g",120,2,"Salat"],["Ko'k salat (ukrop, rayhon, kashnich)","1 hovuch",15,1,"Salat"],
+ ["Tuxum (qaynatilgan)","1 dona",75,6,"Oqsil"],["Omlet","2 tuxum",180,12,"Oqsil"],["Bedana tuxumi","5 dona",70,6,"Oqsil"],
+ ["Qatiq","1 stakan (250 ml)",150,8,"Sut"],["Suzma","100 g",180,10,"Sut"],["Tvorog 5%","150 g",180,25,"Sut"],["Kefir 1%","1 stakan",100,7,"Sut"],
+ ["Ayron","1 stakan",70,4,"Sut"],["Pishloq","30 g",105,7,"Sut"],["Sut 2,5%","1 stakan",130,7,"Sut"],["Qurt","3 dona",60,6,"Sut"],
+ ["Qora non","1 bo'lak (30 g)",70,2,"Non"],["Obi non","chorak (~120 g)",300,9,"Non"],["Patir","chorak (~100 g)",330,8,"Non"],
+ ["Olma","1 dona",80,0,"Meva"],["Nok","1 dona",100,1,"Meva"],["Anor","1 dona",140,3,"Meva"],["Uzum","1 kosacha (150 g)",100,1,"Meva"],
+ ["Qovun","1 bo'lak (200 g)",70,1,"Meva"],["Tarvuz","1 bo'lak (300 g)",90,2,"Meva"],["Banan","1 dona",105,1,"Meva"],["Mandarin","2 dona",70,1,"Meva"],
+ ["Shaftoli","1 dona",60,1,"Meva"],["Anjir","2 dona",75,1,"Meva"],["Xurmo","3 dona",70,1,"Meva"],["O'rik qoqi","5 dona",85,1,"Meva"],["Mayiz","1 osh qoshiq",45,0,"Meva"],
+ ["Yong'oq","5 dona (20 g)",130,3,"Yong'oq"],["Bodom","10 dona",70,3,"Yong'oq"],["Pista","1 hovuch (30 g)",170,6,"Yong'oq"],["Semechka","1 hovuch (30 g)",175,6,"Yong'oq"],
+ ["Ko'k / qora choy (shakarsiz)","1 piyola",0,0,"Ichimlik"],["Choy 2 qoshiq shakar bilan","1 piyola",40,0,"Ichimlik"],["Kompot","1 stakan",100,0,"Ichimlik"],
+ ["Meva sharbati","1 stakan",110,1,"Ichimlik"],["Gazli ichimlik","0,5 l",210,0,"Ichimlik"],["Sutli kofe (shakarsiz)","1 chashka",40,2,"Ichimlik"],
+ ["Navvot","1 bo'lak (20 g)",80,0,"Shirinlik"],["Parvarda","3 dona",60,0,"Shirinlik"],["Holva","30 g",160,4,"Shirinlik"],["Asal","1 choy qoshiq",30,0,"Shirinlik"],
+ ["Murabbo","1 osh qoshiq",50,0,"Shirinlik"],["Shokolad","20 g",110,1,"Shirinlik"]
+];
+var FCATS=[["Hammasi","all"],["⭐ Meniki","Meniki"],["🍲 Suyuq","Suyuq"],["🥘 Asosiy","Asosiy"],["🥟 Xamirli","Xamirli"],["🍚 Garnir","Garnir"],["🥗 Salat","Salat"],["🥚 Oqsil","Oqsil"],["🥛 Sut","Sut"],["🍞 Non","Non"],["🍎 Meva","Meva"],["🌰 Yong'oq","Yong'oq"],["🫖 Ichimlik","Ichimlik"],["🍬 Shirinlik","Shirinlik"]];
+var LEVELS=[
+ ["🌱","Boshlanish"],["👣","Birinchi qadam"],["🌤️","Uyg'onish"],["🔥","Uchqun"],["💪","Shijoat"],["🥉","Bronza yulduz"],
+ ["🌿","Yangilanish"],["🎯","Maqsadli"],["⚡","Energiya"],["🧭","Yo'l ustasi"],["🥈","Kumush yulduz"],
+ ["🌊","To'lqin"],["🦋","O'zgarish"],["🏔️","Cho'qqi sari"],["🛡️","Intizom"],["🥇","Oltin yulduz"],
+ ["🌟","Porloq"],["🚀","Parvoz"],["👑","Iroda egasi"],["✨","Olmosga yaqin"],["💎","Olmos yulduz"],["🏁","Marra oldida"],["🏆","Chempion"]
+];
+var QUOTES=[
+ "Har bir kichik qadam — katta o'zgarishning boshlanishi.","Bugungi tanlovingiz ertangi tanangizni quradi.",
+ "Mukammal bo'lish shart emas, izchil bo'lish yetarli.","Tarozi — faqat bitta raqam. Kuchingiz, kayfiyatingiz va uyqungiz ham natija.",
+ "Sekin borgan uzoqqa boradi.","Bitta og'ir ovqat kunni buzmaydi. Muhimi — umumiy yo'nalish.",
+ "Bugun bir stakan suv ko'proq iching — tanangiz rahmat aytadi.","O'zingizni boshqalar bilan emas, kechagi o'zingiz bilan solishtiring.",
+ "Motivatsiya boshlatadi, odat esa davom ettiradi.","Charchagan bo'lsangiz ham 10 daqiqa yuring — boshlash eng qiyini.",
+ "Siz buni o'zingiz uchun qilyapsiz. Bu eng yaxshi sabab.","Har bir tashlangan kilogramm — tizzalaringiz va yuragingiz uchun sovg'a.",
+ "Ochlik va zerikishni farqlang: avval suv iching, 10 daqiqa kuting.","Kecha qiyin bo'lgan bo'lsa, bugun — yangi imkoniyat.",
+ "\"Dushanbadan\" emas — keyingi ovqatdan boshlang.","Tarozida ko'rinmasa ham, tanangiz ichida o'zgarish ketyapti.",
+ "Sabr — eng kuchli yog' yoqar vosita.","O'zingizga mehribon bo'ling: tanqid emas, g'amxo'rlik o'zgartiradi.",
+ "Har kuni 1% yaxshiroq — bir necha oyda butunlay boshqa odam.","Siz allaqachon boshladingiz. Ko'pchilik shu qadamni ham qo'ymaydi.",
+ "Uyqu ham rejangizning bir qismi — bugun ertaroq yoting."
+];
+var BADGES=[
+ ["firstfood","📒","Birinchi yozuv","Ovqat kundaligiga birinchi marta yozdingiz"],
+ ["food7","🗓️","Kundalik ustasi","7 kun ovqatlaringizni yozdingiz"],
+ ["water7","💧","Suv ustasi","7 kun suv me'yorini to'liq ichdingiz"],
+ ["perfect","✅","Mukammal kun","Bir kunda barcha 7 odatni bajardingiz"],
+ ["work1","🏃","Birinchi mashq","Birinchi mashqni bajardingiz"],
+ ["work10","🏅","10 ta mashq","Jami 10 ta mashq bajarildi"],
+ ["work30","🏆","30 ta mashq","Jami 30 ta mashq bajarildi"],
+ ["streak7","🔥","Olovli hafta","7 kun ketma-ket yaxshi kunlar"],
+ ["weigh8","⚖️","Muntazam nazorat","Vaznni 8 marta yozdingiz"],
+ ["meas4","📏","O'lchov ustasi","Tana o'lchamlarini 4 marta yozdingiz"]
+];
+var MEAS=[["waist","Bel","eng ingichka joyi, kindikdan 2–3 sm yuqori"],["belly","Qorin","kindik ustidan"],["hips","Son-dumba","dumbaning eng keng joyi"],
+ ["chest","Ko'krak","eng keng joyi, qo'ltiq ostidan"],["thigh","Son","o'ng sonning eng yo'g'on joyi"],["arm","Qo'l","o'ng yelkaning o'rtasi"]
+];
+var LEARN=[
+ ["⚖️ Ozish qanday ishlaydi?",
+  "<p>Tana kuniga sarflaganidan kamroq energiya (kaloriya) olsa, yetishmagan qismini zaxiradagi yog'dan oladi. Bunga <b>kaloriya defitsiti</b> deyiladi.</p><p>1 kg tana yog'i taxminan 7 700 kkal ga teng. Kuniga 500–750 kkal kam yesangiz va ko'proq harakat qilsangiz, haftasiga taxminan 0,5–1 kg ketadi.</p><p>Hech qanday maxsus mahsulot, choy yoki tabletka buni almashtirmaydi — natijani ovqatlanish, harakat, uyqu va sabr beradi.</p>"],
+ ["🎯 Maqsadingiz qanchalik real?","__GOAL__"],
+ ["🥚 Nega oqsil muhim?",
+  "<p>Oqsil uzoq vaqt to'q tutadi va ozish paytida <b>mushaklarni saqlaydi</b>. Mushak qancha ko'p bo'lsa, tana tinch holatda ham shuncha ko'p kaloriya sarflaydi.</p><p>Har ovqatda kaftingiz kattaligidagi oqsil bo'lsin: tuxum, tovuq, baliq, yog'siz mol go'shti, tvorog, qatiq, yasmiq, mosh, no'xat.</p>"],
+ ["😴 Uyqu va stress",
+  "<p>6 soatdan kam uxlaganda ochlik gormoni (grelin) ko'payadi, to'qlik gormoni (leptin) kamayadi — ertasi kuni shirinlikka ishtaha kuchayadi.</p><p>Har kuni bir vaqtda yoting, uxlashdan 1 soat oldin ekranni kamaytiring. Stressni yurish, nafas mashqlari yoki suhbat bilan kamaytiring — ovqat bilan emas.</p>"],
+ ["💧 Suv nima beradi?",
+  "<p>Ko'pincha chanqoqlikni ochlik deb o'ylaymiz. Ovqatdan oldin 1 stakan suv ichish to'qlikni tezlashtiradi.</p><p>Shirin ichimliklar — eng oson kesiladigan \"yashirin\" kaloriyalar: 1 l gazli ichimlikda ~400 kkal bor. Siydik och sariq rangda bo'lsa, suv yetarli.</p>"],
+ ["📉 Vazn nega sakraydi?",
+  "<p>Vazn kundan-kunga 0,5–1,5 kg o'zgarishi normal: tuz, suv, hayz sikli, ovqat hajmi ta'sir qiladi. Bu yog' emas.</p><p>Har <b>dushanba</b> kuni <b>ertalab, och qoringa, hojatxonadan keyin</b> tortiling va haftalik tendensiyaga qarang. Bel o'lchami va kiyim ham yaxshi ko'rsatkich.</p>"],
+ ["⏸️ Vazn to'xtab qolsa (plato)",
+  "<p>2–3 hafta o'zgarmaslik normal holat. 3 haftadan oshsa, tekshiring:</p><ul><li>Porsiyalar sezdirmay kattalashmadimi? (yog', non, gazaklar)</li><li>Qadamlar kamaymadimi?</li><li>Uyqu yetarlimi?</li><li>Vazn tushgani sababli kaloriya ehtiyoji kamaydi — Sozlamalarda vaznni yangilang, app hisobni qayta qiladi.</li></ul><p>Kaloriyani 1200 dan pastga tushirmang — buning o'rniga harakatni oshiring.</p>"],
+ ["❌ Mashhur afsonalar",
+  "<ul><li><b>\"Soat 18:00 dan keyin yemaslik kerak\"</b> — muhimi kunlik umumiy miqdor; uxlashdan 2–3 soat oldin yengil ovqat bemalol.</li><li><b>\"Qorin mashqi qorin yog'ini ketkazadi\"</b> — yog' joyidan tanlab ketmaydi, butun tanadan ketadi.</li><li><b>\"Yog' yoqar choy/tabletkalar\"</b> — isbotlanmagan, ba'zilari xavfli.</li><li><b>\"Och qolsam tezroq ozaman\"</b> — mushak yo'qoladi, keyin vazn tez qaytadi.</li><li><b>\"Non va guruchni butunlay tashlash kerak\"</b> — kerakmas, faqat porsiyani kichraytiring.</li></ul>"],
+ ["🩺 Qachon shifokorga murojaat qilish kerak?",
+  "<p>Boshlashdan oldin terapevtga ko'rinib, qon tahlili (qand, qalqonsimon bez gormonlari, temir) topshirish foydali. Ayniqsa quyidagilar bo'lsa:</p><ul><li>qandli diabet, yuqori qon bosimi, yurak yoki bo'g'im kasalliklari;</li><li>hayz sikli buzilishi (ayollarda), doimiy dori ichish;</li><li>homiladorlik yoki emizish davri.</li></ul><p>Mashq paytida ko'krak og'rig'i, kuchli hansirash yoki bosh aylanishi bo'lsa — to'xtang va shifokorga murojaat qiling.</p>"],
+ ["💪 Motivatsiyani saqlash",
+  "<ul><li>Katta maqsadni bo'laklarga bo'ling — har 5 kg bir bayram (Bosh sahifadagi bosqichlar).</li><li>Mukammallik shart emas: haftaning 80% i reja bo'yicha o'tsa — bu muvaffaqiyat.</li><li>Bir kun buzilsa, keyingi ovqatdan davom eting. \"Dushanbadan boshlayman\" deb kutmang.</li><li>Boshlanishda bel o'lchamini va rasmingizni saqlab qo'ying — tarozi ko'rsatmagan o'zgarishni ular ko'rsatadi.</li></ul>"]
+];
+
+/* ---------- views ---------- */
+var tab="home", mealDay=(new Date().getDay()+6)%7;
+function ring(pct){
+  var R=48,C=2*Math.PI*R;
+  return '<svg width="112" height="112" viewBox="0 0 112 112"><circle cx="56" cy="56" r="'+R+'" fill="none" stroke="var(--line)" stroke-width="11"/>'+
+   '<circle cx="56" cy="56" r="'+R+'" fill="none" stroke="var(--green)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-pct))+'"/></svg>';
+}
+function chart(){
+  var s=S.settings,ws=weightsSorted(),W=320,H=170,pl=34,pr=10,pt=12,pb=24;
+  var x0=s.startDate,x1=addDays(s.startDate,Math.round(s.mMax*30.44));
+  ws.forEach(function(p){if(p.d>x1)x1=p.d;if(p.d<x0)x0=p.d});
+  var span=Math.max(1,daysBetween(x0,x1));
+  var ymax=Math.max(s.start,ws.reduce(function(m,p){return Math.max(m,p.w)},0))+1;
+  var ymin=Math.min(s.goal,ws.reduce(function(m,p){return Math.min(m,p.w)},999))-1;
+  function X(d){return pl+(W-pl-pr)*daysBetween(x0,d)/span}
+  function Y(w){return pt+(H-pt-pb)*(ymax-w)/(ymax-ymin)}
+  var g="";
+  var step=(ymax-ymin)>15?5:2;
+  for(var v=Math.ceil(ymin/step)*step;v<=ymax;v+=step){
+    g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--line)"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" font-size="10" text-anchor="end" fill="var(--muted)">'+v+'</text>';
+  }
+  var eF=addDays(s.startDate,Math.round(s.mMin*30.44)),eS=addDays(s.startDate,Math.round(s.mMax*30.44));
+  g+='<polygon points="'+X(s.startDate)+','+Y(s.start)+' '+X(eF)+','+Y(s.goal)+' '+X(eS)+','+Y(s.goal)+'" fill="var(--green)" fill-opacity=".12"/>';
+  g+='<line x1="'+X(s.startDate)+'" y1="'+Y(s.start)+'" x2="'+X(eF)+'" y2="'+Y(s.goal)+'" stroke="var(--muted)" stroke-dasharray="4 4" stroke-width="1.2"/>';
+  g+='<line x1="'+X(s.startDate)+'" y1="'+Y(s.start)+'" x2="'+X(eS)+'" y2="'+Y(s.goal)+'" stroke="var(--muted)" stroke-dasharray="4 4" stroke-width="1.2"/>';
+  g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(s.goal)+'" y2="'+Y(s.goal)+'" stroke="var(--green)" stroke-opacity=".35" stroke-width="1"/>';
+  g+='<text x="'+(W-pr)+'" y="'+(Y(s.goal)-4)+'" font-size="10" text-anchor="end" fill="var(--green)">maqsad '+s.goal+'</text>';
+  if(ws.length){
+    var pts=ws.map(function(p){return X(p.d).toFixed(1)+","+Y(p.w).toFixed(1)}).join(" ");
+    g+='<polyline points="'+pts+'" fill="none" stroke="var(--coral)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    ws.forEach(function(p){g+='<circle cx="'+X(p.d)+'" cy="'+Y(p.w)+'" r="3.5" fill="var(--card)" stroke="var(--coral)" stroke-width="2"/>'});
+  }
+  g+='<text x="'+pl+'" y="'+(H-6)+'" font-size="10" fill="var(--muted)">'+fmtD(x0)+'</text><text x="'+(W-pr)+'" y="'+(H-6)+'" font-size="10" text-anchor="end" fill="var(--muted)">'+fmtD(x1)+'</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Vazn grafigi">'+g+'</svg>'+
+   '<div class="row small muted" style="gap:14px;margin-top:4px"><span><b style="color:var(--coral)">●</b> haqiqiy vazn</span><span><b style="color:var(--green);opacity:.5">■</b> reja oralig\'i ('+s.mMin+'–'+s.mMax+' oy)</span></div>';
+}
+function mondayOf(k){var d=parseD(k),wd=(d.getDay()+6)%7;return addDays(k,-wd)}
+function weighBanner(){
+  var t=today(),mon=mondayOf(t),isMon=new Date().getDay()===1;
+  var doneW=S.weights.some(function(p){return p.d>=mon&&p.d<=t});
+  var doneM=(S.meas||[]).some(function(p){return p.d>=mon&&p.d<=t});
+  var next=addDays(mon,7),left=daysBetween(t,next);
+  if(isMon&&!(doneW&&doneM))
+    return '<div class="card" style="background:var(--amber-2);border-color:var(--amber)"><div style="font-size:30px">⚖️📏</div><h2 style="margin:6px 0 4px">Bugun dushanba — o\'lchov kuni!</h2>'+
+      '<p class="small" style="margin:0">Ertalab, och qoringa, hojatxonadan keyin tortiling va tana o\'lchamlarini santimetr lentasi bilan o\'lchang.</p>'+
+      '<div class="row small" style="gap:14px;margin-top:8px"><span>'+(doneW?'✅':'⬜')+' Vazn</span><span>'+(doneM?'✅':'⬜')+' Tana o\'lchamlari</span></div></div>';
+  if(doneW&&doneM)return '<div class="note green" style="margin:0 0 14px">✅ Bu haftalik o\'lchov bajarildi. Keyingisi: dushanba, '+fmtD(next)+'.</div>';
+  return '<div class="note blue" style="margin:0 0 14px">⚖️ Keyingi o\'lchov kuni: <b>dushanba, '+fmtD(next)+'</b> ('+left+' kundan keyin).'+(doneW||doneM?'':' Bu hafta hali o\'lchanmadi — xohlasangiz bugun ham yozing.')+'</div>';
+}
+function measSorted(){return (S.meas||[]).slice().sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:0})}
+function measCard(){
+  var ms=measSorted(),first=ms[0],last=ms[ms.length-1];
+  function firstVal(key){for(var i=0;i<ms.length;i++)if(ms[i][key])return ms[i][key];return null}
+  function lastVal(key){for(var i=ms.length-1;i>=0;i--)if(ms[i][key])return ms[i][key];return null}
+  var html='<div class="card"><h2>Tana o\'lchamlari (sm)</h2><div class="grid3">'+
+    MEAS.map(function(m){return '<div class="field"><label>'+m[1]+'</label><input id="m_'+m[0]+'" type="number" step="0.5" inputmode="decimal" placeholder="'+(lastVal(m[0])||'sm')+'"></div>'}).join("")+
+    '</div><div class="row"><input id="mDate" type="date" value="'+today()+'"><button class="btn" id="mAdd">Saqlash</button></div>';
+  if(ms.length){
+    var tot=0,rows='';
+    MEAS.forEach(function(m){var a=firstVal(m[0]),b=lastVal(m[0]);if(a==null)return;var df=r1(b-a);tot+=df;
+      rows+='<tr><td style="width:auto;color:var(--ink)">'+m[1]+'</td><td>'+a+'</td><td><b>'+b+'</b></td><td style="color:'+(df<0?'var(--green)':df>0?'var(--coral)':'var(--muted)')+';font-weight:800">'+(df>0?'+':'')+df+'</td></tr>';});
+    html+='<table class="week" style="margin-top:12px"><tr><td style="width:auto">O\'lcham</td><td>Boshida</td><td>Hozir</td><td>Farq</td></tr>'+rows+'</table>';
+    if(tot<0)html+='<p style="margin:10px 0 0;font-weight:800;color:var(--green)">Jami −'+r1(-tot)+' sm 🎉</p>';
+    var w=lastVal("waist");
+    if(w){var ratio=w/S.settings.height;html+='<div class="note '+(ratio<0.5?'green':'amber')+' small">Bel / bo\'y nisbati: <b>'+ratio.toFixed(2).replace(".",",")+'</b> — '+(ratio<0.5?'sog\'lom oraliqda 👏':'maqsad 0,50 dan past (bel '+Math.floor(S.settings.height/2)+' sm dan kam)')+'. Bu qorin yog\'ining yaxshi ko\'rsatkichi.</div>';}
+    html+='<ul class="list" style="margin-top:8px">'+ms.slice(-4).reverse().map(function(p){
+      var parts=MEAS.filter(function(m){return p[m[0]]}).map(function(m){return m[1].toLowerCase()+' '+p[m[0]]});
+      return '<li><span class="small"><b>'+fmtD(p.d)+'</b> · '+parts.join(", ")+'</span><button class="x" data-mdel="'+p.d+'" aria-label="O\'chirish">×</button></li>'}).join("")+'</ul>';
+  }else html+='<p class="small muted" style="margin:8px 0 0">Birinchi o\'lchovni bugun yozing — keyin har dushanba solishtirasiz. Tarozi turib qolsa ham, santimetrlar ko\'pincha kamayishda davom etadi.</p>';
+  html+='<details style="border:0;margin-top:6px"><summary class="small">Qanday o\'lchash kerak?</summary><div class="body small"><ul>'+
+    MEAS.map(function(m){return '<li><b>'+m[1]+'</b> — '+m[2]+'</li>'}).join("")+
+    '<li>Lentani teriga tekkizing, lekin siqmang. Qorinni ichga tortmang, oddiy nafas chiqargandan keyin o\'lchang.</li><li>Har safar bir xil joyda, ertalab, kiyimsiz yoki yupqa kiyimda o\'lchang.</li></ul></div></details></div>';
+  return html;
+}
+function goalText(c){
+  var s=S.settings,f=function(x){return r1(x).toString().replace(".",",")};
+  var html='<p>Maqsad: <b>'+s.start+' → '+s.goal+' kg</b> ('+f(c.total)+' kg).</p>'+
+   '<ul><li>Haftalik maqsad: <b>0,5–1 kg</b> — xavfsiz oraliq.</li>'+
+   '<li>Muddat: <b>'+s.mMin+'–'+s.mMax+' oy</b> ('+fmtDY(c.endFast)+' – '+fmtDY(c.endSlow)+').</li>'+
+   '<li>Shu muddatga yetish uchun o\'rtacha <b>'+f(c.needSlow)+'–'+f(c.needFast)+' kg</b> haftasiga kerak.</li></ul>';
+  if(c.needFast>1.05)html+='<p>⚠️ '+s.mMin+' oyda yetish uchun haftasiga 1 kg dan ko\'p tashlash kerak bo\'ladi — bunga intilmang. Eng kam muddatni uzaytiring.</p>';
+  if(c.needSlow<0.5)html+='<p>'+s.mMax+' oy — juda bemalol muddat. Haftasiga 0,5 kg bilan ham ertaroq yetasiz.</p>';
+  html+='<p>Birinchi haftalarda vazn tezroq tushadi (asosan suv), keyin sekinlashadi — bu normal. Haftalik natija 0,5–1 kg oralig\'ida bo\'lsa, to\'g\'ri yo\'ldasiz. 1 kg dan ko\'p tushsa — ovqatni biroz ko\'paytiring, 0,5 kg dan kam bo\'lsa — harakatni oshiring.</p>';
+  html+='<p>Maqsad vazningizda BMI <b>'+r1(c.goalBmi)+'</b> bo\'ladi — normal oraliqda (18,5–24,9).</p>';
+  return html;
+}
+function weeklyRate(){
+  var ws=weightsSorted();if(ws.length<2)return null;
+  var b=ws[ws.length-1],a=null;
+  for(var i=ws.length-2;i>=0;i--){if(daysBetween(ws[i].d,b.d)>=6){a=ws[i];break;}}
+  if(!a)return null;
+  var days=daysBetween(a.d,b.d);return {rate:(a.w-b.w)/days*7,from:a.d,to:b.d};
+}
+function viewHome(){
+  var s=S.settings,c=calc(),bl=bmiLabel(c.bmi),ws=weightsSorted();
+  var daysIn=Math.max(0,daysBetween(s.startDate,today()));
+  var expSlow=Math.max(s.goal,s.start-c.needSlow*daysIn/7);
+  var status=c.w<=expSlow+0.3?['Reja oralig\'ida ketyapsiz 👏','green']:['Rejadan '+r1(c.w-expSlow)+' kg orqadasiz — bu normal, davom eting','amber'];
+  var wr=weeklyRate();
+  if(wr){var rt=r1(wr.rate),rs=rt.toString().replace(".",",");
+    status=wr.rate>1.05?['So\'nggi hafta: −'+rs+' kg. Bu 1 kg dan tez — ovqatni biroz ko\'paytiring, tez ozish mushakka zarar.','amber']:
+      wr.rate>=0.5?['So\'nggi hafta: −'+rs+' kg — haftalik maqsad (0,5–1 kg) bajarildi ✅','green']:
+      wr.rate>0?['So\'nggi hafta: −'+rs+' kg. Maqsad 0,5–1 kg — harakatni biroz oshiring, porsiyalarni tekshiring.','amber']:
+      ['So\'nggi hafta vazn tushmadi. Bu ba\'zan bo\'ladi (suv, tuz). Ma\'lumot bo\'limidagi "Plato" mavzusini o\'qing.','amber'];}
+  var lv=levelOf(c.w),L=levelInfo(lv),mx=maxLevel();
+  var toNext=lv>=mx?0:r1(c.w-(s.start-(lv+1)));
+  var frac=lv>=mx?1:Math.max(0,Math.min(1,(s.start-c.w)-lv));
+  var qi=Math.floor(Date.now()/86400000)%QUOTES.length;
+  var html='<div class="card quote"><div class="s" style="margin:0 0 6px">✨ Bugungi motivatsiya</div><div class="q">'+QUOTES[qi]+'</div>'+
+   '<div class="s">'+(c.left>0?'Maqsadga '+r1(c.left)+' kg qoldi — siz uddalaysiz!':'Maqsadga yetdingiz — endi natijani saqlaymiz!')+'</div></div>';
+  if(S.weights.length>1&&(!S.lastBackup||daysBetween(S.lastBackup,today())>=30))html+='<div class="note amber" style="margin:0 0 14px">💾 Zaxira nusxa olish vaqti keldi. Sozlamalar (⚙️) → "Faylga saqlash".</div>';
+  if(today()<s.startDate)html+='<div class="note blue" style="margin:0 0 14px">🚀 Reja <b>'+fmtD(s.startDate)+'</b> kuni boshlanadi. Bugun tayyorgarlik ko\'ring: santimetr lenta va tarozini tayyorlang, uyda sabzavot va oqsilli mahsulotlar bo\'lsin.</div>';
+  else html+=weighBanner();
+  html+='<div class="card"><div class="hero"><div class="ring">'+ring(c.pct)+'<div class="c"><b>'+Math.round(c.pct*100)+'%</b><span>maqsadga</span></div></div>'+
+   '<div style="flex:1"><div class="muted small">Hozirgi vazn</div><div style="font-size:34px;font-weight:800;line-height:1.1">'+r1(c.w)+' <span style="font-size:16px">kg</span></div>'+
+   '<div class="small" style="margin-top:4px"><b style="color:var(--green)">'+(c.lost>0.05?'−'+r1(c.lost):'0')+' kg</b> tashlandi · <b>'+r1(Math.max(0,c.left))+' kg</b> qoldi</div>'+
+   '<div style="margin-top:8px"><span class="pill '+bl[1]+'">BMI '+r1(c.bmi)+' · '+bl[0]+'</span></div></div></div>'+
+   ((wr||daysIn>6)?'<div class="note '+status[1]+'">'+status[0]+'</div>':'')+'</div>';
+  html+='<div class="card"><h2>Bugungi raqamlaringiz</h2><div class="grid2">'+
+   '<div class="stat"><b>'+c.kcal+'</b><span>kkal / kun</span></div>'+
+   '<div class="stat"><b>'+c.protein+' g</b><span>oqsil / kun</span></div>'+
+   '<div class="stat"><b>'+(c.waterMl/1000).toFixed(2).replace(/0$/,"").replace(".",",")+' l</b><span>suv ('+c.glasses+' stakan)</span></div>'+
+   '<div class="stat"><b>'+PHASES[phase()-1].steps.toLocaleString("ru-RU")+'</b><span>qadam / kun</span></div></div>'+
+   '<p class="small muted" style="margin:10px 0 0">'+daysIn+'-kun · haftalik maqsad: <b>0,5–1 kg</b> · muddat: <b>'+s.mMin+'–'+s.mMax+' oy</b> ('+fmtD(c.endFast)+' – '+fmtDY(c.endSlow)+'). Hozir: <b>'+PHASES[phase()-1].n+'</b></p></div>';
+  html+='<div class="card"><h2>Vaznni yozish</h2><div class="row"><input id="wIn" type="number" step="0.1" inputmode="decimal" placeholder="masalan, 76.4"><input id="wDate" type="date" value="'+today()+'" style="max-width:150px"><button class="btn" id="wAdd">+</button></div>'+
+   '<p class="small muted" style="margin:8px 0 0">Har dushanba ertalab, och qoringa, bir xil kiyimda tortiling.</p><div style="margin-top:10px">'+chart()+'</div>';
+  if(ws.length){
+    html+='<ul class="list" style="margin-top:8px">'+ws.slice(-6).reverse().map(function(p){
+      return '<li><span>'+fmtDY(p.d)+'</span><span><b>'+r1(p.w)+' kg</b><button class="x" data-del="'+p.d+'" aria-label="O\'chirish">×</button></span></li>';
+    }).join("")+'</ul>';
+  }
+  html+='</div>';
+  html+=measCard();
+  var grid='';
+  for(var i=0;i<=mx;i++){var Li=levelInfo(i);grid+='<div class="'+(i===lv?'cur':i>lv?'lock':'')+(Li.big||Li.final?' big':'')+'"><span>'+Li.ic+'</span><small>'+(i===0?'start':'−'+i)+'</small></div>';}
+  html+='<div class="card"><h2>Darajangiz</h2><div class="lvl"><div class="badge">'+L.ic+'</div><div style="flex:1"><div class="num">'+lv+'-daraja / '+mx+'</div><div class="nm">'+L.name+'</div>'+
+   (lv<mx?'<div class="kbar"><i style="width:'+Math.round(frac*100)+'%;background:var(--amber)"></i></div><div class="small muted">Keyingi darajagacha <b>'+toNext+' kg</b>: '+levelInfo(lv+1).ic+' '+levelInfo(lv+1).name+'</div>':'<div class="small muted">Barcha darajalar ochildi! 🎉</div>')+
+   '</div></div><div class="lvgrid">'+grid+'</div>'+
+   '<p class="small muted" style="margin:10px 0 0">Har 1 kg — yangi daraja. Har 5 kg — katta yulduz (🥉 🥈 🥇 💎). O\'zingizni ovqat bilan emas — yangi kiyim, sayr yoki sevimli mashg\'ulot bilan taqdirlang.</p></div>';
+  var bd=S.badges||{};
+  html+='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Yutuqlar</h2><span class="pill amber">'+Object.keys(bd).length+' / '+BADGES.length+'</span></div><div class="badges" style="margin-top:10px">'+
+   BADGES.map(function(b){return '<div class="'+(bd[b[0]]?'':'lock')+'"><b>'+b[1]+'</b>'+b[2]+'</div>'}).join("")+'</div></div>';
+  html+='<div class="card"><h2>Maqsadingiz haqida</h2>'+goalText(c)+'</div>';
+  return html;
+}
+var foodSub="log",foodCat="all",foodQ="";
+function allFoods(){
+  var cu=(S.custom||[]).map(function(f,i){return [f.n,f.p,f.k,f.pr,"Meniki",i]});
+  return cu.concat(FOODS);
+}
+function foodListHtml(){
+  var q=foodQ.trim().toLowerCase(),arr=allFoods(),out=[];
+  arr.forEach(function(f,i){
+    if(foodCat!=="all"&&f[4]!==foodCat)return;
+    if(q&&f[0].toLowerCase().indexOf(q)<0)return;
+    out.push('<div class="food"><div class="i"><div class="n">'+esc(f[0])+'</div><div class="m">'+esc(f[1])+' · '+f[2]+' kkal · '+f[3]+' g oqsil</div></div>'+
+      (f[4]==="Meniki"?'<button class="x" data-cdel="'+f[5]+'" aria-label="O\'chirish">🗑</button>':'')+
+      '<button class="add" data-fadd="'+i+'" aria-label="Qo\'shish">+</button></div>');
+  });
+  if(!out.length)return '<p class="small muted">'+(foodCat==="Meniki"&&!q?'Hali o\'z ovqatingiz yo\'q — pastdagi shakl orqali qo\'shing.':'Topilmadi. Pastda o\'zingiz qo\'shishingiz mumkin.')+'</p>';
+  return out.join("");
+}
+function viewFoodLog(){
+  var c=calc(),td=day(),sumK=0,sumP=0;
+  td.food.forEach(function(f){sumK+=f.k;sumP+=f.pr});
+  var over=sumK>c.kcal,left=c.kcal-sumK;
+  var html=photoCard()+'<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bugun yedim</h2><span class="pill '+(over?'coral':'')+'">'+sumK+' / '+c.kcal+' kkal</span></div>'+
+   '<div class="kbar'+(over?' over':'')+'"><i style="width:'+Math.min(100,Math.round(sumK/c.kcal*100))+'%"></i></div>'+
+   '<div class="small muted">'+(over?'Me\'yordan '+(-left)+' kkal oshdi — hechqisi yo\'q, ertaga davom etamiz.':'Yana <b>'+left+' kkal</b> qoldi')+'</div>'+
+   '<div class="small" style="margin-top:8px">Oqsil: <b>'+sumP+' / '+c.protein+' g</b></div><div class="kbar"><i style="width:'+Math.min(100,Math.round(sumP/c.protein*100))+'%;background:var(--coral)"></i></div>';
+  if(td.food.length){
+    html+='<ul class="list" style="margin-top:8px">'+td.food.map(function(f,i){return '<li><span>'+esc(f.n)+' <span class="small muted">· '+esc(f.p)+'</span></span><span><b>'+f.k+'</b> <span class="small muted">kkal</span><button class="x" data-frm="'+i+'" aria-label="O\'chirish">×</button></span></li>'}).join("")+'</ul>';
+  }else html+='<p class="small muted" style="margin:10px 0 0">Hali hech narsa yozilmadi. Pastdagi ro\'yxatdan <b>+</b> ni bosing.</p>';
+  html+='</div>';
+  html+='<div class="card"><h2>O\'zbek taomlari ro\'yxati</h2><input id="fq" type="search" placeholder="🔍 Qidirish: osh, mastava, qatiq..." value="'+esc(foodQ)+'">'+
+   '<div class="seg" style="margin:10px 0 4px">'+FCATS.map(function(x){return '<button data-fcat="'+x[1]+'" class="'+(foodCat===x[1]?'on':'')+'">'+x[0]+'</button>'}).join("")+'</div>'+
+   '<div id="flist">'+foodListHtml()+'</div><p class="small muted" style="margin:8px 0 0">Kaloriyalar taxminiy — uy taomlari retseptga qarab farq qiladi. Xamirli taomlar menyuda yo\'q, lekin yegan kuningiz yozib qo\'yishingiz uchun ro\'yxatda bor.</p></div>';
+  html+='<div class="card"><h2>O\'z ovqatingizni qo\'shish</h2>'+
+   '<div class="field"><label>Nomi</label><input id="cf_n" placeholder="masalan, Onamning dimlamasi"></div>'+
+   '<div class="grid3"><div class="field"><label>Porsiya</label><input id="cf_p" placeholder="1 likopcha"></div><div class="field"><label>Kaloriya</label><input id="cf_k" type="number" inputmode="numeric" placeholder="kkal"></div><div class="field"><label>Oqsil (g)</label><input id="cf_pr" type="number" inputmode="numeric" placeholder="0"></div></div>'+
+   '<button class="btn" id="cf_add" style="width:100%">Ro\'yxatga qo\'shish</button>'+
+   '<p class="small muted" style="margin:8px 0 0">Qo\'shilgan ovqatlar "⭐ Meniki" bo\'limida saqlanadi.</p></div>';
+  return html;
+}
+function viewFood(){
+  var h='<div class="seg">'+[["log","📝 Kundalik"],["menu","📅 Menyu"],["tips","💡 Maslahatlar"]].map(function(x){return '<button data-fsub="'+x[0]+'" class="'+(foodSub===x[0]?'on':'')+'">'+x[1]+'</button>'}).join("")+'</div>';
+  return h+(foodSub==="log"?viewFoodLog():foodSub==="menu"?viewFoodMenu():viewFoodTips());
+}
+function viewFoodMenu(){
+  var c=calc(),d=MEALS[mealDay];
+  var html='<div class="card"><h2>Kunlik me\'yor</h2><div class="grid3">'+
+   '<div class="stat"><b>'+c.protein+'g</b><span>oqsil</span></div><div class="stat"><b>'+c.carb+'g</b><span>uglevod</span></div><div class="stat"><b>'+c.fat+'g</b><span>yog\'</span></div></div>'+
+   '<p class="small muted" style="margin:10px 0 0">Jami taxminan <b>'+c.kcal+' kkal</b>. Bu sizning sarfingizdan (~'+Math.round(c.tdee/10)*10+' kkal) taxminan 600 kkal kam. Kaloriya sanash shart emas — quyidagi likopcha qoidasi va menyu shu me\'yorga mos tuzilgan.</p></div>';
+  html+='<div class="card"><h2>Haftalik menyu</h2><div class="seg">'+DAYN.map(function(n,i){return '<button data-md="'+i+'" class="'+(i===mealDay?'on':'')+'">'+n+(i===(new Date().getDay()+6)%7?' •':'')+'</button>'}).join("")+'</div>'+
+   d.map(function(m){return '<div class="meal"><div class="ic">'+m[0]+'</div><div><div class="k">'+m[1]+'</div><div>'+m[2]+'</div></div></div>'}).join("")+
+   '<div class="note green">Ovqatlar o\'rnini bemalol almashtirish mumkin. Choy — shakarsiz. Non — kuniga ko\'pi bilan 2 bo\'lak.</div></div>';
+  return html;
+}
+function viewFoodTips(){
+  var html="";
+  html+='<div class="card"><h2>Likopcha qoidasi</h2><div class="plate">'+
+   '<svg width="104" height="104" viewBox="0 0 42 42" style="flex:0 0 104px"><circle cx="21" cy="21" r="20" fill="var(--bg)" stroke="var(--line)"/>'+
+   '<path d="M21 21 L21 3 A18 18 0 0 1 21 39 Z" fill="var(--green)"/><path d="M21 21 L21 39 A18 18 0 0 1 3 21 Z" fill="var(--coral)"/><path d="M21 21 L3 21 A18 18 0 0 1 21 3 Z" fill="var(--amber)"/></svg>'+
+   '<div class="small"><div><b style="color:var(--green)">½ sabzavot</b> — salat, pomidor, bodring, karam, sabzi, qovoq</div><div style="margin-top:4px"><b style="color:var(--coral)">¼ oqsil</b> — go\'sht, tovuq, baliq, tuxum, dukkaklilar</div><div style="margin-top:4px"><b style="color:var(--amber)">¼ uglevod</b> — guruch, grechka, kartoshka, non</div><div style="margin-top:4px" class="muted">+ 1 osh qoshiq yog\'</div></div></div></div>';
+  html+='<div class="card"><h2>Oqilona almashtirishlar</h2>'+SWAPS.map(function(s){return '<div class="swap"><span class="a">'+s[0]+'</span><span>→</span><span class="b">'+s[1]+'</span></div>'}).join("")+'</div>';
+  html+='<div class="card"><h2>To\'y va mehmondorchilikda</h2><ul style="margin:0;padding-left:20px"><li>Uydan biroz to\'q chiqing — och borsangiz ko\'p yeysiz.</li><li>Avval salat va sho\'rva, keyin osh — kichik porsiya.</li><li>Non va shirinlikdan bittasini tanlang, ikkalasini emas.</li><li>Ertasi kuni odatdagi rejaga qayting — \"ertaga ko\'proq och qolaman\" kerak emas.</li></ul></div>';
+  return html;
+}
+function viewMove(){
+  var p=phase(),P=PHASES[p-1],wp=weekPlan(p),di=(new Date().getDay()+6)%7,td=day(),todays=wp[di];
+  var isStr=todays===P.str.name;
+  var html='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bugungi mashq</h2><span class="pill">'+P.n+'</span></div>'+
+   '<p style="font-size:19px;font-weight:800;margin:10px 0 4px">'+todays+'</p>'+
+   (isStr?'<div>'+P.str.list.map(function(e){return '<div class="ex"><b>'+EX[e[0]][0]+' — '+e[1]+'</b><span class="small muted">'+EX[e[0]][1]+'</span></div>'}).join("")+'</div><p class="small muted">To\'plamlar orasida 60 soniya dam. Avval 5 daqiqa joyida yurib qiziting.</p>':di===6?'<p class="small muted">'+EX.stretch[1]+' Xohlasangiz, 20–30 daqiqa sekin sayr qiling.</p>':'<p class="small muted">Tez yurish — gaplasha olasiz, lekin qo\'shiq ayta olmaysiz. Yugurish intervallarida ham suhbat qila oladigan tezlikda yuguring.</p>')+
+   '<div class="check'+(td.workout?' on':'')+'" id="wDone" style="border:0;margin-top:6px"><div class="box">'+(td.workout?'✓':'')+'</div><div><div class="t">Bajarildi</div><div class="d">Bugungi mashqni belgilash</div></div></div></div>';
+  html+='<div class="card"><h2>Bu haftaning jadvali</h2><p class="small muted" style="margin:0 0 6px">'+P.goal+' Qadamlar: <b>'+P.steps.toLocaleString("ru-RU")+'</b> / kun.</p><table class="week">'+
+   wp.map(function(w,i){return '<tr class="'+(i===di?'today':'')+'"><td>'+DAYN[i]+'</td><td>'+w+'</td></tr>'}).join("")+'</table></div>';
+  html+='<div class="card"><h2>Yo\'l xaritasi (5–8 oy)</h2>'+PHASES.map(function(ph,i){
+    return '<div class="ex"><b>'+(i+1===p?'▶ ':'')+ph.n+'</b><span class="small muted">'+ph.goal+' Kardio: '+ph.cardio.toLowerCase()+'. Kuch: '+ph.str.name+'. Qadam: '+ph.steps.toLocaleString("ru-RU")+'.</span></div>'}).join("")+'</div>';
+  html+='<div class="card"><h2>Xavfsizlik</h2><ul style="margin:0;padding-left:20px" class="small"><li>Bo\'g\'im og\'risa — yugurish o\'rniga tez yurish yoki velosiped.</li><li>O\'tkir og\'riq, ko\'krak og\'rig\'i, bosh aylanishi — darhol to\'xtang.</li><li>Yaxshi oyoq kiyimi tizzalarni asraydi.</li><li>Mashq "jazo" emas: kuchsiz kuni ham 15 daqiqa yurish — hisob.</li></ul></div>';
+  return html;
+}
+function streak(){
+  var n=0,k=today(),c=calc();
+  if(!isGood(S.days[k],c))k=addDays(k,-1);
+  while(isGood(S.days[k],c)){n++;k=addDays(k,-1);}
+  return n;
+}
+function isGood(d,c){if(!d)return false;var h=0;for(var i in d.habits)if(d.habits[i])h++;return h>=4&&d.water>=c.glasses-2}
+function viewHabits(){
+  var c=calc(),td=day(),g=c.glasses,done=0;
+  HABITS.forEach(function(h){if(td.habits[h.id])done++});
+  var html='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Suv</h2><span class="pill blue">'+(td.water*250/1000).toFixed(2).replace(".",",")+' / '+(c.waterMl/1000).toFixed(2).replace(".",",")+' l</span></div>'+
+   '<div class="water">';
+  for(var i=0;i<g;i++)html+='<button class="glass'+(i<td.water?' on':'')+'" data-g="'+i+'" aria-label="'+(i+1)+'-stakan"><i></i></button>';
+  html+='</div><p class="small muted" style="margin:6px 0 0">Har bir stakan — 250 ml. Bosib belgilang. Choy va sho\'rva ham hisobga kiradi, shirin ichimliklar — yo\'q.</p>'+
+   '<div class="note blue small">Maslahat: uyg\'onganda 1 stakan, har ovqatdan oldin 1 stakan — shunda yarmi o\'zi bajariladi.</div></div>';
+  html+='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bugungi odatlar</h2><span class="pill">'+done+' / '+HABITS.length+'</span></div><div style="margin-top:6px">'+
+   HABITS.map(function(h){var on=!!td.habits[h.id];return '<div class="check'+(on?' on':'')+'" data-h="'+h.id+'"><div class="box">'+(on?'✓':'')+'</div><div><div class="t">'+h.t+'</div><div class="d">'+h.d+'</div></div></div>'}).join("")+'</div></div>';
+  var bars='';
+  for(var j=6;j>=0;j--){
+    var k=addDays(today(),-j),d=S.days[k],cnt=0;
+    if(d){for(var x in d.habits)if(d.habits[x])cnt++;}
+    var pct=Math.round(cnt/HABITS.length*100);
+    bars+='<div><i><em style="height:'+pct+'%"></em></i>'+DAYN[(parseD(k).getDay()+6)%7]+'</div>';
+  }
+  var st=streak();
+  html+='<div class="card"><h2>Oxirgi 7 kun</h2><div class="mini7">'+bars+'</div>'+
+   '<p class="small" style="margin:10px 0 0">🔥 Ketma-ket yaxshi kunlar: <b>'+st+'</b> <span class="muted">(kamida 4 odat + suv me\'yoriga yaqin)</span></p></div>';
+  return html;
+}
+function viewLearn(){
+  var c=calc();
+  return '<div class="card"><h2>Ozish haqida bilish kerak bo\'lganlar</h2><p class="small muted" style="margin:0 0 4px">Har bir mavzuni bosib o\'qing.</p>'+
+   LEARN.map(function(a,i){return '<details'+(i===0?' open':'')+'><summary>'+a[0]+'</summary><div class="body">'+(a[1]==="__GOAL__"?goalText(c):a[1])+'</div></details>'}).join("")+'</div>'+
+   '<p class="small muted" style="padding:0 4px">Bu app umumiy tavsiyalar beradi va shifokor maslahati o\'rnini bosmaydi. Kaloriya hisoblari taxminiy (Mifflin–St Jeor formulasi).</p>';
+}
+
+/* ---------- render & events ---------- */
+var view=document.getElementById("view");
+function render(){
+  view.innerHTML=tab==="home"?viewHome():tab==="food"?viewFood():tab==="move"?viewMove():tab==="habits"?viewHabits():viewLearn();
+  [].forEach.call(document.querySelectorAll("#tabs button"),function(b){b.classList.toggle("on",b.getAttribute("data-tab")===tab)});
+}
+document.getElementById("tabs").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;tab=b.getAttribute("data-tab");
+  try{location.hash=tab}catch(_){}
+  render();window.scrollTo(0,0);
+});
+view.addEventListener("click",function(e){
+  var t=e.target,el;
+  if((el=t.closest("#wAdd"))){
+    var v=parseFloat(String(document.getElementById("wIn").value).replace(",","."));
+    var dd=document.getElementById("wDate").value||today();
+    if(!(v>25&&v<300))return;
+    S.weights=S.weights.filter(function(p){return p.d!==dd});
+    S.weights.push({d:dd,w:r1(v)});save();render();return;
+  }
+  if((el=t.closest("[data-del]"))){var k=el.getAttribute("data-del");S.weights=S.weights.filter(function(p){return p.d!==k});save();render();return;}
+  if((el=t.closest("#mAdd"))){
+    var dd2=document.getElementById("mDate").value||today(),rec={d:dd2},any=false;
+    MEAS.forEach(function(m){var v=parseFloat(String(document.getElementById("m_"+m[0]).value).replace(",","."));if(v>10&&v<250){rec[m[0]]=r1(v);any=true;}});
+    if(!any){toast("Kamida bitta o'lchamni kiriting");return;}
+    if(!S.meas)S.meas=[];
+    var ex=S.meas.filter(function(p){return p.d===dd2})[0];
+    if(ex){for(var kk in rec)ex[kk]=rec[kk];}else S.meas.push(rec);
+    save();var y4=window.scrollY;render();window.scrollTo(0,y4);toast("📏 O'lchamlar saqlandi");return;}
+  if((el=t.closest("[data-mdel]"))){var md=el.getAttribute("data-mdel");S.meas=(S.meas||[]).filter(function(p){return p.d!==md});save();var y5=window.scrollY;render();window.scrollTo(0,y5);return;}
+  if((el=t.closest("[data-prm]"))){PH.items.splice(+el.getAttribute("data-prm"),1);if(!PH.items.length)PH.items=null;render();return;}
+  if((el=t.closest("#phAdd"))){
+    [].forEach.call(view.querySelectorAll("[data-pk]"),function(inp){var i=+inp.getAttribute("data-pk"),v=parseInt(inp.value,10);if(PH.items[i]&&v>=0)PH.items[i].k=Math.min(v,5000);});
+    var dd=day();PH.items.forEach(function(x){dd.food.push({n:"📸 "+x.n,p:x.p,k:x.k,pr:x.pr})});
+    var nAdd=PH.items.length;PH.items=null;PH.izoh="";PH.err="";if(PH.preview){try{URL.revokeObjectURL(PH.preview)}catch(_){}}PH.preview="";PH.note="";
+    save();render();toast("✓ "+nAdd+" ta taom qo'shildi");return;}
+  if((el=t.closest("[data-fsub]"))){foodSub=el.getAttribute("data-fsub");render();return;}
+  if((el=t.closest("[data-fcat]"))){foodCat=el.getAttribute("data-fcat");
+    [].forEach.call(view.querySelectorAll("[data-fcat]"),function(b){b.classList.toggle("on",b===el)});
+    document.getElementById("flist").innerHTML=foodListHtml();return;}
+  if((el=t.closest("[data-fadd]"))){
+    var f=allFoods()[+el.getAttribute("data-fadd")];if(!f)return;
+    day().food.push({n:f[0],p:f[1],k:f[2],pr:f[3]});save();
+    var y=window.scrollY;render();window.scrollTo(0,y);toast("✓ "+f[0]+" qo'shildi");return;}
+  if((el=t.closest("[data-frm]"))){day().food.splice(+el.getAttribute("data-frm"),1);save();var y2=window.scrollY;render();window.scrollTo(0,y2);return;}
+  if((el=t.closest("[data-cdel]"))){(S.custom||[]).splice(+el.getAttribute("data-cdel"),1);save();var y3=window.scrollY;render();window.scrollTo(0,y3);return;}
+  if((el=t.closest("#cf_add"))){
+    var n=document.getElementById("cf_n").value.trim(),k=parseInt(document.getElementById("cf_k").value,10);
+    if(!n||!(k>=0)){toast("Nomi va kaloriyasini kiriting");return;}
+    if(!S.custom)S.custom=[];
+    S.custom.push({n:n.slice(0,60),p:(document.getElementById("cf_p").value.trim()||"1 porsiya").slice(0,40),k:Math.min(k,5000),pr:Math.max(0,parseInt(document.getElementById("cf_pr").value,10)||0)});
+    foodCat="Meniki";foodQ="";save();render();toast("⭐ Ro'yxatga qo'shildi");return;}
+  if((el=t.closest("[data-md]"))){mealDay=+el.getAttribute("data-md");render();return;}
+  if((el=t.closest("#wDone"))){var d=day();d.workout=!d.workout;save();render();return;}
+  if((el=t.closest("[data-g]"))){var d2=day(),i=+el.getAttribute("data-g");d2.water=(d2.water===i+1)?i:i+1;save();render();return;}
+  if((el=t.closest("[data-h]"))){var d3=day(),id=el.getAttribute("data-h");d3.habits[id]=!d3.habits[id];save();render();return;}
+});
+view.addEventListener("change",function(e){
+  if(e.target.id==="phFile"&&e.target.files&&e.target.files[0]){analyzePhoto(e.target.files[0]);e.target.value="";}
+  else if(e.target.hasAttribute&&e.target.hasAttribute("data-pk")&&PH.items){var i=+e.target.getAttribute("data-pk"),v=parseInt(e.target.value,10);if(PH.items[i]&&v>=0){PH.items[i].k=Math.min(v,5000);var tt=0;PH.items.forEach(function(x){tt+=x.k});var te=document.getElementById("phTot");if(te)te.textContent=tt+" kkal";}}
+});
+view.addEventListener("input",function(e){
+  if(e.target.id==="phNote")PH.note=e.target.value;
+  if(e.target.id==="fq"){foodQ=e.target.value;var fl=document.getElementById("flist");if(fl)fl.innerHTML=foodListHtml();}
+});
+document.getElementById("ceOk").onclick=function(){
+  var el=document.getElementById("cele");el.classList.remove("on");
+  [].forEach.call(el.querySelectorAll(".conf"),function(n){n.remove()});
+  render();if(CQ.length)setTimeout(showCele,300);
+};
+var M=document.getElementById("settings");
+function $(id){return document.getElementById(id)}
+$("openSettings").onclick=function(){
+  var s=S.settings;$("s_sex").value=s.sex;$("s_age").value=s.age;$("s_height").value=s.height;$("s_mmin").value=s.mMin;$("s_key").value=s.apiKey||"";$("s_mmax").value=s.mMax;
+  $("s_start").value=s.start;$("s_goal").value=s.goal;$("s_date").value=s.startDate;$("s_act").value=String(s.activity);M.classList.add("on");
+};
+$("bkCopy").onclick=function(){
+  var txt=JSON.stringify(S);
+  try{navigator.clipboard.writeText(txt).then(function(){$("bkMsg").textContent="✅ Nusxa ko'chirildi — Notes ilovasiga joylab saqlang.";},function(){$("bkIn").value=txt;$("bkMsg").textContent="Matnni belgilab, o'zingiz ko'chiring.";});}
+  catch(e){$("bkIn").value=txt;$("bkMsg").textContent="Matnni belgilab, o'zingiz ko'chiring.";}
+};
+function restoreFrom(txt){
+  var r=null;try{r=JSON.parse(String(txt).trim())}catch(e){}
+  if(!r||!r.settings||!r.weights){$("bkMsg").textContent="❌ Nusxa noto'g'ri.";return false;}
+  var key=S.settings.apiKey;S=r;migrate();if(!S.days)S.days={};if(key&&!S.settings.apiKey)S.settings.apiKey=key;S.maxLevel=null;save();M.classList.remove("on");render();toast("♻️ Ma'lumotlar tiklandi");return true;
+}
+$("bkFile").onclick=function(){
+  var out=JSON.parse(JSON.stringify(S));if(out.settings)delete out.settings.apiKey;
+  var b=new Blob([JSON.stringify(out)],{type:"application/json"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(b);a.download="yengil-zaxira-"+today()+".json";document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);
+  S.lastBackup=today();save();$("bkMsg").textContent="✅ Fayl tayyor — \"Fayllarga saqlash\" → iCloud Drive ni tanlang.";
+};
+$("bkPick").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var fr=new FileReader();fr.onload=function(){restoreFrom(fr.result)};fr.readAsText(f);e.target.value="";};
+$("bkRestore").onclick=function(){
+  var r=null;try{r=JSON.parse($("bkIn").value.trim())}catch(e){}
+  if(!r||!r.settings||!r.weights){$("bkMsg").textContent="❌ Nusxa noto'g'ri. To'liq matnni joylang.";return;}
+  S=r;migrate();if(!S.days)S.days={};S.maxLevel=null;save();M.classList.remove("on");render();toast("♻️ Ma'lumotlar tiklandi");
+};
+$("closeSettings").onclick=function(){M.classList.remove("on")};
+M.addEventListener("click",function(e){if(e.target===M)M.classList.remove("on")});
+$("saveSettings").onclick=function(){
+  var s=S.settings;
+  function num(id,def){var v=parseFloat(String($(id).value).replace(",","."));return isFinite(v)&&v>0?v:def}
+  var oldStart=s.start,oldDate=s.startDate;
+  s.sex=$("s_sex").value;s.age=num("s_age",s.age);s.height=num("s_height",s.height);s.mMin=Math.max(1,Math.min(24,num("s_mmin",s.mMin)));s.mMax=Math.max(s.mMin,Math.min(36,num("s_mmax",s.mMax)));
+  s.start=num("s_start",s.start);s.goal=num("s_goal",s.goal);s.startDate=$("s_date").value||s.startDate;s.activity=parseFloat($("s_act").value)||1.375;s.apiKey=$("s_key").value.trim().slice(0,300);
+  S.weights.forEach(function(p){if(p.d===oldDate&&p.w===oldStart){p.d=s.startDate;p.w=s.start;}});
+  if(!S.weights.length)S.weights.push({d:s.startDate,w:s.start});
+  S.maxLevel=null;
+  save();M.classList.remove("on");render();
+};
+if(S.maxLevel==null)S.maxLevel=levelOf(curW());
+if(!S.badges){S.badges={};var st0=statsAll();BADGES.forEach(function(b){if(badgeMet(b[0],st0))S.badges[b[0]]=today()});}
+var h=(location.hash||"").replace("#","");
+if(["home","food","move","habits","learn"].indexOf(h)>=0)tab=h;
+window.addEventListener("hashchange",function(){var x=(location.hash||"").replace("#","");if(["home","food","move","habits","learn"].indexOf(x)>=0&&x!==tab){tab=x;render();}});
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(function(){});}
+render();
+if(migDirty){migDirty=false;save();}
+})();
+</script>
+</body>
+</html>
