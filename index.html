@@ -153,6 +153,22 @@ details .body ul{margin:0 0 8px;padding-left:20px}
 @keyframes sp{to{transform:rotate(360deg)}}
 .pitem{display:grid;grid-template-columns:1fr 78px 30px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .pitem input{padding:7px 8px;text-align:right}
+.daybar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px;margin-bottom:12px;box-shadow:var(--shadow)}
+.daybar button{flex:0 0 44px;height:44px;border:0;border-radius:12px;background:var(--bg);font-size:22px;font-weight:800;color:var(--ink)}
+.daybar button:disabled{opacity:.3}
+.daybar .dm{flex:1;text-align:center;line-height:1.2}
+.daybar .dm b{display:block;font-size:17px}
+.daybar .dm small{font-size:12px;color:var(--muted)}
+.daybar .dm a{font-size:12px;font-weight:800;color:var(--green);text-decoration:none}
+.past{background:var(--amber-2);border-radius:12px;padding:8px 12px;font-size:13px;margin-bottom:12px}
+.edit{background:var(--bg);border-radius:14px;padding:12px;margin:6px 0}
+.edit .mult{display:flex;gap:6px;margin:8px 0}
+.edit .mult button{flex:1;font:inherit;font-weight:800;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 0}
+.edit .mult button.on{background:var(--green);color:#fff;border-color:var(--green)}
+.list li.tap{cursor:pointer}
+.mini7 div{cursor:pointer}
+.mini7 div.sel{color:var(--ink);font-weight:800}
+.mini7 div.sel i{outline:2px solid var(--ink);outline-offset:1px}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 84px);transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .cele{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:24px;overflow:hidden}
@@ -363,8 +379,21 @@ function calc(){
     realDate:addDays(today(),Math.round(realWeeks*7)),pct:total>0?Math.max(0,Math.min(1,lost/total)):0};
 }
 function bmiLabel(b){return b<18.5?["Kam vazn","amber"]:b<25?["Normal","green"]:b<30?["Ortiqcha vazn","amber"]:["Semizlik (I daraja)","coral"]}
+function phaseAt(k){var d=daysBetween(S.settings.startDate,k);return Math.max(1,Math.min(5,Math.floor(d/30)+1))}
 function phase(){var d=daysBetween(S.settings.startDate,today());return Math.max(1,Math.min(5,Math.floor(d/30)+1))}
 function day(k){k=k||today();if(!S.days[k])S.days[k]={water:0,habits:{},workout:false};if(!S.days[k].food)S.days[k].food=[];return S.days[k]}
+
+var selDay=today(),editIdx=-1;
+function sd(){var t=today();if(selDay>t)selDay=t;return selDay}
+var WDAY=["yakshanba","dushanba","seshanba","chorshanba","payshanba","juma","shanba"];
+function dayLabel(k){var t=today();return k===t?"Bugun":k===addDays(t,-1)?"Kecha":fmtD(k)}
+function dayBar(){
+  var k=sd(),t=today(),isT=k===t;
+  return '<div class="daybar"><button data-dnav="-1" aria-label="Oldingi kun">‹</button><div class="dm"><b>'+dayLabel(k)+'</b><small>'+fmtDY(k)+', '+WDAY[parseD(k).getDay()]+'</small>'+
+    (isT?'':'<br><a href="#" data-dnav="0">↩ Bugunga qaytish</a>')+'</div><button data-dnav="1" aria-label="Keyingi kun"'+(isT?' disabled':'')+'>›</button></div>'+
+    (isT?'':'<div class="past">✏️ Siz <b>'+fmtD(k)+'</b> kunini ko\'ryapsiz. Shu kunning yozuvlarini qo\'shish, o\'zgartirish va o\'chirish mumkin — hammasi saqlanadi.</div>');
+}
+function dayWord(k){var t=today();return k===t?"Bugun":k===addDays(t,-1)?"Kecha":fmtD(k)+" kuni"}
 
 /* ---------- levels & rewards ---------- */
 function maxLevel(){return Math.max(1,Math.ceil(S.settings.start-S.settings.goal-1e-9))}
@@ -737,16 +766,23 @@ function foodListHtml(){
   return out.join("");
 }
 function viewFoodLog(){
-  var c=calc(),td=day(),sumK=0,sumP=0;
+  var c=calc(),td=day(sd()),sumK=0,sumP=0;
   td.food.forEach(function(f){sumK+=f.k;sumP+=f.pr});
   var over=sumK>c.kcal,left=c.kcal-sumK;
-  var html=photoCard()+'<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bugun yedim</h2><span class="pill '+(over?'coral':'')+'">'+sumK+' / '+c.kcal+' kkal</span></div>'+
+  var html=photoCard()+'<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">'+dayWord(sd())+' yedim</h2><span class="pill '+(over?'coral':'')+'">'+sumK+' / '+c.kcal+' kkal</span></div>'+
    '<div class="kbar'+(over?' over':'')+'"><i style="width:'+Math.min(100,Math.round(sumK/c.kcal*100))+'%"></i></div>'+
    '<div class="small muted">'+(over?'Me\'yordan '+(-left)+' kkal oshdi — hechqisi yo\'q, ertaga davom etamiz.':'Yana <b>'+left+' kkal</b> qoldi')+'</div>'+
    '<div class="small" style="margin-top:8px">Oqsil: <b>'+sumP+' / '+c.protein+' g</b></div><div class="kbar"><i style="width:'+Math.min(100,Math.round(sumP/c.protein*100))+'%;background:var(--coral)"></i></div>';
   if(td.food.length){
-    html+='<ul class="list" style="margin-top:8px">'+td.food.map(function(f,i){return '<li><span>'+esc(f.n)+' <span class="small muted">· '+esc(f.p)+'</span></span><span><b>'+f.k+'</b> <span class="small muted">kkal</span><button class="x" data-frm="'+i+'" aria-label="O\'chirish">×</button></span></li>'}).join("")+'</ul>';
-  }else html+='<p class="small muted" style="margin:10px 0 0">Hali hech narsa yozilmadi. Pastdagi ro\'yxatdan <b>+</b> ni bosing.</p>';
+    html+='<ul class="list" style="margin-top:8px">'+td.food.map(function(f,i){
+      if(i===editIdx){var q=f.q||1;
+        return '<li style="display:block;border-bottom:0"><div class="edit"><div class="field"><label>Nomi</label><input id="e_n" value="'+esc(f.n)+'"></div>'+
+          '<div class="small muted">Porsiya miqdori:</div><div class="mult">'+[0.5,1,1.5,2].map(function(m){return '<button data-emul="'+m+'" class="'+(q===m?'on':'')+'">'+(m===0.5?'½':m===1.5?'1½':m)+'×</button>'}).join("")+'</div>'+
+          '<div class="grid3"><div class="field"><label>Porsiya</label><input id="e_p" value="'+esc(f.p)+'"></div><div class="field"><label>Kaloriya</label><input id="e_k" type="number" inputmode="numeric" value="'+f.k+'"></div><div class="field"><label>Oqsil (g)</label><input id="e_pr" type="number" inputmode="numeric" value="'+f.pr+'"></div></div>'+
+          '<div class="row"><button class="btn ghost" data-edel="'+i+'">🗑 O\'chirish</button><button class="btn ghost" id="e_cancel">Bekor</button><button class="btn" data-esave="'+i+'" style="flex:1">Saqlash</button></div></div></li>';}
+      return '<li class="tap" data-eopen="'+i+'"><span>'+esc(f.n)+' <span class="small muted">· '+esc(f.p)+((f.q&&f.q!==1)?' ×'+String(f.q).replace(".",","):'')+'</span></span><span><b>'+f.k+'</b> <span class="small muted">kkal ✏️</span></span></li>'}).join("")+'</ul>'+
+      '<p class="small muted" style="margin:4px 0 0">O\'zgartirish uchun taomni bosing.</p>';
+  }else html+='<p class="small muted" style="margin:10px 0 0">'+(sd()===today()?'Hali hech narsa yozilmadi.':'Bu kun uchun yozuv yo\'q.')+' Pastdagi ro\'yxatdan <b>+</b> ni bosing.</p>';
   html+='</div>';
   html+='<div class="card"><h2>O\'zbek taomlari ro\'yxati</h2><input id="fq" type="search" placeholder="🔍 Qidirish: osh, mastava, qatiq..." value="'+esc(foodQ)+'">'+
    '<div class="seg" style="margin:10px 0 4px">'+FCATS.map(function(x){return '<button data-fcat="'+x[1]+'" class="'+(foodCat===x[1]?'on':'')+'">'+x[0]+'</button>'}).join("")+'</div>'+
@@ -760,7 +796,7 @@ function viewFoodLog(){
 }
 function viewFood(){
   var h='<div class="seg">'+[["log","📝 Kundalik"],["menu","📅 Menyu"],["tips","💡 Maslahatlar"]].map(function(x){return '<button data-fsub="'+x[0]+'" class="'+(foodSub===x[0]?'on':'')+'">'+x[1]+'</button>'}).join("")+'</div>';
-  return h+(foodSub==="log"?viewFoodLog():foodSub==="menu"?viewFoodMenu():viewFoodTips());
+  return h+(foodSub==="log"?dayBar()+viewFoodLog():foodSub==="menu"?viewFoodMenu():viewFoodTips());
 }
 function viewFoodMenu(){
   var c=calc(),d=MEALS[mealDay];
@@ -783,12 +819,12 @@ function viewFoodTips(){
   return html;
 }
 function viewMove(){
-  var p=phase(),P=PHASES[p-1],wp=weekPlan(p),di=(new Date().getDay()+6)%7,td=day(),todays=wp[di];
+  var p=phaseAt(sd()),P=PHASES[p-1],wp=weekPlan(p),di=(parseD(sd()).getDay()+6)%7,td=day(sd()),todays=wp[di];
   var isStr=todays===P.str.name;
-  var html='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bugungi mashq</h2><span class="pill">'+P.n+'</span></div>'+
+  var html=dayBar()+'<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">'+(sd()===today()?'Bugungi':dayWord(sd()))+' mashq</h2><span class="pill">'+P.n+'</span></div>'+
    '<p style="font-size:19px;font-weight:800;margin:10px 0 4px">'+todays+'</p>'+
    (isStr?'<div>'+P.str.list.map(function(e){return '<div class="ex"><b>'+EX[e[0]][0]+' — '+e[1]+'</b><span class="small muted">'+EX[e[0]][1]+'</span></div>'}).join("")+'</div><p class="small muted">To\'plamlar orasida 60 soniya dam. Avval 5 daqiqa joyida yurib qiziting.</p>':di===6?'<p class="small muted">'+EX.stretch[1]+' Xohlasangiz, 20–30 daqiqa sekin sayr qiling.</p>':'<p class="small muted">Tez yurish — gaplasha olasiz, lekin qo\'shiq ayta olmaysiz. Yugurish intervallarida ham suhbat qila oladigan tezlikda yuguring.</p>')+
-   '<div class="check'+(td.workout?' on':'')+'" id="wDone" style="border:0;margin-top:6px"><div class="box">'+(td.workout?'✓':'')+'</div><div><div class="t">Bajarildi</div><div class="d">Bugungi mashqni belgilash</div></div></div></div>';
+   '<div class="check'+(td.workout?' on':'')+'" id="wDone" style="border:0;margin-top:6px"><div class="box">'+(td.workout?'✓':'')+'</div><div><div class="t">Bajarildi</div><div class="d">'+dayWord(sd())+' mashqni belgilash</div></div></div></div>';
   html+='<div class="card"><h2>Bu haftaning jadvali</h2><p class="small muted" style="margin:0 0 6px">'+P.goal+' Qadamlar: <b>'+P.steps.toLocaleString("ru-RU")+'</b> / kun.</p><table class="week">'+
    wp.map(function(w,i){return '<tr class="'+(i===di?'today':'')+'"><td>'+DAYN[i]+'</td><td>'+w+'</td></tr>'}).join("")+'</table></div>';
   html+='<div class="card"><h2>Yo\'l xaritasi (5–8 oy)</h2>'+PHASES.map(function(ph,i){
@@ -804,24 +840,24 @@ function streak(){
 }
 function isGood(d,c){if(!d)return false;var h=0;for(var i in d.habits)if(d.habits[i])h++;return h>=4&&d.water>=c.glasses-2}
 function viewHabits(){
-  var c=calc(),td=day(),g=c.glasses,done=0;
+  var c=calc(),td=day(sd()),g=c.glasses,done=0;
   HABITS.forEach(function(h){if(td.habits[h.id])done++});
-  var html='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Suv</h2><span class="pill blue">'+(td.water*250/1000).toFixed(2).replace(".",",")+' / '+(c.waterMl/1000).toFixed(2).replace(".",",")+' l</span></div>'+
+  var html=dayBar()+'<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">'+(sd()===today()?'Suv':dayWord(sd())+' suv')+'</h2><span class="pill blue">'+(td.water*250/1000).toFixed(2).replace(".",",")+' / '+(c.waterMl/1000).toFixed(2).replace(".",",")+' l</span></div>'+
    '<div class="water">';
   for(var i=0;i<g;i++)html+='<button class="glass'+(i<td.water?' on':'')+'" data-g="'+i+'" aria-label="'+(i+1)+'-stakan"><i></i></button>';
   html+='</div><p class="small muted" style="margin:6px 0 0">Har bir stakan — 250 ml. Bosib belgilang. Choy va sho\'rva ham hisobga kiradi, shirin ichimliklar — yo\'q.</p>'+
    '<div class="note blue small">Maslahat: uyg\'onganda 1 stakan, har ovqatdan oldin 1 stakan — shunda yarmi o\'zi bajariladi.</div></div>';
-  html+='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bugungi odatlar</h2><span class="pill">'+done+' / '+HABITS.length+'</span></div><div style="margin-top:6px">'+
+  html+='<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">'+(sd()===today()?'Bugungi':dayWord(sd()))+' odatlar</h2><span class="pill">'+done+' / '+HABITS.length+'</span></div><div style="margin-top:6px">'+
    HABITS.map(function(h){var on=!!td.habits[h.id];return '<div class="check'+(on?' on':'')+'" data-h="'+h.id+'"><div class="box">'+(on?'✓':'')+'</div><div><div class="t">'+h.t+'</div><div class="d">'+h.d+'</div></div></div>'}).join("")+'</div></div>';
   var bars='';
   for(var j=6;j>=0;j--){
     var k=addDays(today(),-j),d=S.days[k],cnt=0;
     if(d){for(var x in d.habits)if(d.habits[x])cnt++;}
     var pct=Math.round(cnt/HABITS.length*100);
-    bars+='<div><i><em style="height:'+pct+'%"></em></i>'+DAYN[(parseD(k).getDay()+6)%7]+'</div>';
+    bars+='<div data-dsel="'+k+'" class="'+(k===sd()?'sel':'')+'"><i><em style="height:'+pct+'%"></em></i>'+DAYN[(parseD(k).getDay()+6)%7]+'</div>';
   }
   var st=streak();
-  html+='<div class="card"><h2>Oxirgi 7 kun</h2><div class="mini7">'+bars+'</div>'+
+  html+='<div class="card"><h2>Oxirgi 7 kun</h2><p class="small muted" style="margin:-4px 0 6px">Kunni bosib, o\'sha kunni ochish va o\'zgartirish mumkin.</p><div class="mini7">'+bars+'</div>'+
    '<p class="small" style="margin:10px 0 0">🔥 Ketma-ket yaxshi kunlar: <b>'+st+'</b> <span class="muted">(kamida 4 odat + suv me\'yoriga yaqin)</span></p></div>';
   return html;
 }
@@ -865,7 +901,7 @@ view.addEventListener("click",function(e){
   if((el=t.closest("[data-prm]"))){PH.items.splice(+el.getAttribute("data-prm"),1);if(!PH.items.length)PH.items=null;render();return;}
   if((el=t.closest("#phAdd"))){
     [].forEach.call(view.querySelectorAll("[data-pk]"),function(inp){var i=+inp.getAttribute("data-pk"),v=parseInt(inp.value,10);if(PH.items[i]&&v>=0)PH.items[i].k=Math.min(v,5000);});
-    var dd=day();PH.items.forEach(function(x){dd.food.push({n:"📸 "+x.n,p:x.p,k:x.k,pr:x.pr})});
+    var dd=day(sd());PH.items.forEach(function(x){dd.food.push({n:"📸 "+x.n,p:x.p,k:x.k,pr:x.pr})});
     var nAdd=PH.items.length;PH.items=null;PH.izoh="";PH.err="";if(PH.preview){try{URL.revokeObjectURL(PH.preview)}catch(_){}}PH.preview="";PH.note="";
     save();render();toast("✓ "+nAdd+" ta taom qo'shildi");return;}
   if((el=t.closest("[data-fsub]"))){foodSub=el.getAttribute("data-fsub");render();return;}
@@ -874,9 +910,27 @@ view.addEventListener("click",function(e){
     document.getElementById("flist").innerHTML=foodListHtml();return;}
   if((el=t.closest("[data-fadd]"))){
     var f=allFoods()[+el.getAttribute("data-fadd")];if(!f)return;
-    day().food.push({n:f[0],p:f[1],k:f[2],pr:f[3]});save();
+    day(sd()).food.push({n:f[0],p:f[1],k:f[2],pr:f[3]});editIdx=-1;save();
     var y=window.scrollY;render();window.scrollTo(0,y);toast("✓ "+f[0]+" qo'shildi");return;}
-  if((el=t.closest("[data-frm]"))){day().food.splice(+el.getAttribute("data-frm"),1);save();var y2=window.scrollY;render();window.scrollTo(0,y2);return;}
+  if((el=t.closest("[data-dnav]"))){e.preventDefault();var dn=+el.getAttribute("data-dnav");selDay=dn===0?today():addDays(sd(),dn);if(selDay>today())selDay=today();editIdx=-1;render();return;}
+  if((el=t.closest("[data-dsel]"))){selDay=el.getAttribute("data-dsel");editIdx=-1;render();window.scrollTo(0,0);return;}
+  if((el=t.closest("[data-eopen]"))){editIdx=+el.getAttribute("data-eopen");var y6=window.scrollY;render();window.scrollTo(0,y6);return;}
+  if((el=t.closest("#e_cancel"))){editIdx=-1;var y7=window.scrollY;render();window.scrollTo(0,y7);return;}
+  if((el=t.closest("[data-emul]"))){
+    var fe=day(sd()).food[editIdx];if(!fe)return;var m=+el.getAttribute("data-emul"),q0=fe.q||1;
+    if(fe.bk==null){fe.bk=Math.round(fe.k/q0);fe.bpr=Math.round(fe.pr/q0);}
+    document.getElementById("e_k").value=Math.round(fe.bk*m);document.getElementById("e_pr").value=Math.round(fe.bpr*m);
+    [].forEach.call(view.querySelectorAll("[data-emul]"),function(b){b.classList.toggle("on",b===el)});el.setAttribute("data-picked","1");fe._m=m;return;}
+  if((el=t.closest("[data-esave]"))){
+    var arr=day(sd()).food,ix=+el.getAttribute("data-esave"),fx=arr[ix];if(!fx)return;
+    var nk=parseInt(document.getElementById("e_k").value,10),np=parseInt(document.getElementById("e_pr").value,10);
+    fx.n=(document.getElementById("e_n").value.trim()||fx.n).slice(0,60);fx.p=(document.getElementById("e_p").value.trim()||fx.p).slice(0,40);
+    if(fx._m){fx.q=fx._m;delete fx._m;}
+    if(nk>=0)fx.k=Math.min(nk,5000);if(np>=0)fx.pr=Math.min(np,500);
+    if(fx.bk==null){fx.bk=Math.round(fx.k/(fx.q||1));fx.bpr=Math.round(fx.pr/(fx.q||1));}
+    editIdx=-1;save();var y8=window.scrollY;render();window.scrollTo(0,y8);toast("✓ O'zgartirildi");return;}
+  if((el=t.closest("[data-edel]"))){day(sd()).food.splice(+el.getAttribute("data-edel"),1);editIdx=-1;save();var y9=window.scrollY;render();window.scrollTo(0,y9);toast("🗑 O'chirildi");return;}
+  if((el=t.closest("[data-frm]"))){day(sd()).food.splice(+el.getAttribute("data-frm"),1);save();var y2=window.scrollY;render();window.scrollTo(0,y2);return;}
   if((el=t.closest("[data-cdel]"))){(S.custom||[]).splice(+el.getAttribute("data-cdel"),1);save();var y3=window.scrollY;render();window.scrollTo(0,y3);return;}
   if((el=t.closest("#cf_add"))){
     var n=document.getElementById("cf_n").value.trim(),k=parseInt(document.getElementById("cf_k").value,10);
@@ -885,9 +939,9 @@ view.addEventListener("click",function(e){
     S.custom.push({n:n.slice(0,60),p:(document.getElementById("cf_p").value.trim()||"1 porsiya").slice(0,40),k:Math.min(k,5000),pr:Math.max(0,parseInt(document.getElementById("cf_pr").value,10)||0)});
     foodCat="Meniki";foodQ="";save();render();toast("⭐ Ro'yxatga qo'shildi");return;}
   if((el=t.closest("[data-md]"))){mealDay=+el.getAttribute("data-md");render();return;}
-  if((el=t.closest("#wDone"))){var d=day();d.workout=!d.workout;save();render();return;}
-  if((el=t.closest("[data-g]"))){var d2=day(),i=+el.getAttribute("data-g");d2.water=(d2.water===i+1)?i:i+1;save();render();return;}
-  if((el=t.closest("[data-h]"))){var d3=day(),id=el.getAttribute("data-h");d3.habits[id]=!d3.habits[id];save();render();return;}
+  if((el=t.closest("#wDone"))){var d=day(sd());d.workout=!d.workout;save();render();return;}
+  if((el=t.closest("[data-g]"))){var d2=day(sd()),i=+el.getAttribute("data-g");d2.water=(d2.water===i+1)?i:i+1;save();render();return;}
+  if((el=t.closest("[data-h]"))){var d3=day(sd()),id=el.getAttribute("data-h");d3.habits[id]=!d3.habits[id];save();render();return;}
 });
 view.addEventListener("change",function(e){
   if(e.target.id==="phFile"&&e.target.files&&e.target.files[0]){analyzePhoto(e.target.files[0]);e.target.value="";}
